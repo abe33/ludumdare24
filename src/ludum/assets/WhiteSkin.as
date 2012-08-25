@@ -5,7 +5,7 @@ package ludum.assets
      */
     public class WhiteSkin
     {
-        [Embed(source='../../../assets/white/white-bg-1.png')]
+        [Embed(source='../../../assets/white/world-1-white-bg.jpg')]
         static public const BACKGROUND: Class;
     }
 }
