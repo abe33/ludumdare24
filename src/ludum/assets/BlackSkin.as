@@ -5,7 +5,7 @@ package ludum.assets
      */
     public class BlackSkin
     {
-        [Embed(source='../../../assets/black/black-bg-1.png')]
+        [Embed(source='../../../assets/black/black-bg-2.png')]
         static public const BACKGROUND: Class;
     }
 }
