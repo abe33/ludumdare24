@@ -30,5 +30,7 @@ package ludum
         public static const SPAWN_OUT : Number = -60;
         public static const MOUSE_PROXIMITY : Number = 30;
         public static const MOUSE_LIMIT : Number = 0;
+        public static const SPLATS_WIDTH : int = 128;
+        public static const SPLATS_HEIGHT : int = 128;
     }
 }

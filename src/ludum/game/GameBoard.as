@@ -1,5 +1,6 @@
 package ludum.game
 {
+    import ludum.effects.MobSplash;
     import flash.ui.Mouse;
     import abe.com.mon.core.Allocable;
     import abe.com.mon.core.Suspendable;
@@ -132,6 +133,10 @@ package ludum.game
             var dist: Number = Point.distance(tmpPt(mob.x, mob.y), tmpPt(player.x, player.y));
             if(dist < Constants.COLLISION_DISTANCE)
             {
+                var splash:MobSplash =new MobSplash(playerTrailBitmap);
+                playerLevel.addChildAt(splash, 0);
+                splash.x = mob.x;
+                splash.y = mob.y;
             	spawner.release(mob);
             }
         }

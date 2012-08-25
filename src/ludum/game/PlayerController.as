@@ -36,10 +36,10 @@ package ludum.game
             	Mouse.hide();
 			else
             	Mouse.show();
-                
+             /*   
             if(mouse.x > Constants.MOUSE_LIMIT && mouse.x < Constants.WIDTH - Constants.MOUSE_LIMIT && 
                mouse.y > Constants.MOUSE_LIMIT && mouse.y < Constants.HEIGHT - Constants.MOUSE_LIMIT)
-            {
+            {*/
 	            if(dif.length > Constants.MAX_DISTANCE && !_burst) dif.normalize(Constants.MAX_DISTANCE);
 	                        
 	            velocity.x += dif.x / Constants.MOTION_SMOOTHNESS;
@@ -48,7 +48,7 @@ package ludum.game
 	            var angle: Number = MathUtils.rad2deg(Math.atan2(velocity.y, velocity.x));
 	            
 	            rotation = angle;          
-            }
+            //}
 		    player.x += velocity.x * biasInSeconds;
 		    player.y += velocity.y * biasInSeconds;                
             
