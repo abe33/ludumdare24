@@ -9,6 +9,7 @@ package ludum.game
 
     import flash.events.MouseEvent;
     import flash.geom.Point;
+    import flash.ui.Mouse;
     /**
      * @author cedric
      */
@@ -31,17 +32,25 @@ package ludum.game
             
             var dif : Point = mouse.subtract(pt(player.x, player.y));
             
-            if(dif.length > Constants.MAX_DISTANCE && !_burst) dif.normalize(Constants.MAX_DISTANCE);
-                        
-            velocity.x += dif.x / Constants.MOTION_SMOOTHNESS;
-            velocity.y += dif.y / Constants.MOTION_SMOOTHNESS;
-
-            var angle: Number = MathUtils.rad2deg(Math.atan2(velocity.y, velocity.x));
-            
-            rotation = angle;
-                        
-	        player.x += velocity.x * biasInSeconds;
-	        player.y += velocity.y * biasInSeconds;                
+            if(dif.length < Constants.MOUSE_PROXIMITY)
+            	Mouse.hide();
+			else
+            	Mouse.show();
+                
+            if(mouse.x > Constants.MOUSE_LIMIT && mouse.x < Constants.WIDTH - Constants.MOUSE_LIMIT && 
+               mouse.y > Constants.MOUSE_LIMIT && mouse.y < Constants.HEIGHT - Constants.MOUSE_LIMIT)
+            {
+	            if(dif.length > Constants.MAX_DISTANCE && !_burst) dif.normalize(Constants.MAX_DISTANCE);
+	                        
+	            velocity.x += dif.x / Constants.MOTION_SMOOTHNESS;
+	            velocity.y += dif.y / Constants.MOTION_SMOOTHNESS;
+	
+	            var angle: Number = MathUtils.rad2deg(Math.atan2(velocity.y, velocity.x));
+	            
+	            rotation = angle;          
+            }
+		    player.x += velocity.x * biasInSeconds;
+		    player.y += velocity.y * biasInSeconds;                
             
             velocity.x *= Constants.FRICTION;
             velocity.y *= Constants.FRICTION;

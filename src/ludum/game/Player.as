@@ -1,9 +1,11 @@
 package ludum.game
 {
     import abe.com.mon.core.Allocable;
+    import abe.com.mon.utils.StageUtils;
 
     import flash.display.MovieClip;
     import flash.display.Sprite;
+    import flash.events.KeyboardEvent;
     /**
      * @author cedric
      */
@@ -20,6 +22,14 @@ package ludum.game
 
         public function Player ()
         {
+            
+            CONFIG::DEBUG
+            {
+             	StageUtils.stage.addEventListener(KeyboardEvent.KEY_UP, function(e:KeyboardEvent):void{
+                    var mc: MovieClip = view;
+                    mc.gotoAndStop(mc.currentFrame + 1 <= mc.totalFrames ? mc.currentFrame + 1 : 1);
+                });   
+            }
         }
         
         public function get ratio () : Number {

@@ -42,8 +42,8 @@ package ludum.effects
             _brushesPositions = [pt(6,4),pt(4,-3),pt(-4,2)];
             _brushesLastPositions = [pt(6,4),pt(4,-3),pt(-4,2)];
             _brushesSizes = [2,3,4];
-            _brushesSizesFactor = [Math.random(), Math.random(), Math.random()];
             _brushesLastSizes = [2,3,4];
+            _brushesSizesFactor = [.2, .4, .9];
             _shape = new Shape();
         }
 

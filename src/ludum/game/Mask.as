@@ -27,7 +27,6 @@ package ludum.game
             _random = new Random(new LaggedFibonnacciRandom(Math.floor(Math.random()*156506)));
             _t = 0;
             _redrawLimit = -100;
-            _balance = Constants.HEIGHT / 2;
            
             var a : Array = new Array();
 			for(var i:int=-1; i <= 11; i++)
@@ -39,7 +38,7 @@ package ludum.game
         
         public function spawnNextPoint(ratio:Number = 0, pos: int = 12):Point
         {
-            return new Point(pos * (Constants.WIDTH / 10), Constants.HEIGHT / 2 + _random.ibalance(50) + ratio * _balance);
+            return new Point(pos * (Constants.WIDTH / 10), Constants.HEIGHT / 2 + _random.ibalance(50) + ratio * Constants.SPLIT_BALANCE);
         }
         
         public function set ratio(n:Number):void
@@ -81,7 +80,15 @@ package ludum.game
             shape.graphics.lineTo(Constants.WIDTH-_redrawLimit, Constants.HEIGHT+50);
             shape.graphics.lineTo(_redrawLimit, Constants.HEIGHT+50);
             shape.graphics.lineTo(_redrawLimit, points[0].y);
-            shape.graphics.endFill();
+            shape.graphics.endFill ();
+        }
+
+        public function get curve () : SmoothSpline {
+            return _curve;
+        }
+
+        public function set curve ( curve : SmoothSpline ) : void {
+            _curve = curve;
         }
     }
 }

@@ -1,7 +1,10 @@
 package ludum.game
 {
+    import flash.ui.Mouse;
     import abe.com.mon.core.Allocable;
     import abe.com.mon.core.Suspendable;
+    import abe.com.mon.geom.rect;
+    import abe.com.mon.geom.tmpPt;
     import abe.com.motion.Impulse;
     import abe.com.motion.ImpulseListener;
 
@@ -16,6 +19,7 @@ package ludum.game
     import flash.display.Shader;
     import flash.display.Shape;
     import flash.display.Sprite;
+    import flash.geom.Point;
     import flash.utils.ByteArray;
 
     /**
@@ -38,14 +42,20 @@ package ludum.game
         private var playerLevel : Sprite;
         private var playerTrail: Tracer;
         private var playerTrailBitmap: BitmapData;
-        private var playerTrailScroller: BitmapScroller;
+        private var playerTrailScroller : BitmapScroller;
+        private var mobLevel : Sprite;
+        private var spawner : Spawner;
         
         public function GameBoard () {}
 
         public function init () : void
         {
+            scrollRect = rect(0,0,Constants.WIDTH, Constants.HEIGHT);
+            
             boardMask = new Mask(); 
             maskShape = new Shape();
+            playerLevel = new Sprite();
+            mobLevel = new Sprite();
             
             player = new Player();            
             whiteLand = new Land(WhiteSkin);
@@ -53,6 +63,7 @@ package ludum.game
             playerTrailBitmap = new BitmapData(Constants.WIDTH, Constants.HEIGHT, true, 0x00000000);
             playerTrailScroller = new BitmapScroller(playerTrailBitmap);
             playerTrail = new Tracer(player, playerTrailBitmap);
+            spawner = new Spawner(mobLevel, boardMask);
             
             player.x = 100;
             player.y = 240;
@@ -61,10 +72,7 @@ package ludum.game
             playerTrail.init();
             whiteLand.init();
             blackLand.init();
-            
-            
-            playerLevel = new Sprite();
-            
+                        
             var shader: Shader = new Shader(new SHADER() as ByteArray);
             playerLevel.blendShader = shader;
             playerLevel.blendMode = "shader";
@@ -72,6 +80,7 @@ package ludum.game
             addChild(whiteLand);
             addChild(blackLand);
             blackLand.mask = maskShape;
+            addChild(mobLevel);
             addChild(playerLevel);
             playerLevel.addChild(new Bitmap(playerTrailBitmap));
             playerLevel.addChild(player);
@@ -101,8 +110,30 @@ package ludum.game
             playerTrail.scroll(biasInSeconds);
             playerTrail.update(bias, biasInSeconds);
             player.update(bias, biasInSeconds);
+            spawner.update(bias, biasInSeconds);
+            
+            var scrollAmount: Number = Constants.SCROLL_RATE * biasInSeconds;
+            
+            for each(var mob:Mob in spawner.allMobs)
+            {
+                mob.x -= scrollAmount;
+                solveCollision(mob);
+                
+                
+                if( mob.x < Constants.SPAWN_OUT )
+                	spawner.release(mob);
+            }
                         
             boardMask.draw(maskShape);
+        }
+
+        private function solveCollision ( mob : Mob ) : void
+        {
+            var dist: Number = Point.distance(tmpPt(mob.x, mob.y), tmpPt(player.x, player.y));
+            if(dist < Constants.COLLISION_DISTANCE)
+            {
+            	spawner.release(mob);
+            }
         }
 
         public function start () : void

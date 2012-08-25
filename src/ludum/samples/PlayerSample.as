@@ -1,5 +1,6 @@
 package ludum.samples
 {
+    import ludum.game.WhiteMob;
     import ludum.effects.BitmapScroller;
     import abe.com.motion.Impulse;
     import abe.com.motion.ImpulseListener;
@@ -27,6 +28,7 @@ package ludum.samples
         private var playerLevel : Sprite;
         private var back : Shape;
         private var scroller : BitmapScroller;
+        private var mob : WhiteMob;
         
         public function PlayerSample ()
         {
@@ -59,6 +61,12 @@ package ludum.samples
             back.graphics.endFill();
             playerLevel = new Sprite();
             
+            mob = new WhiteMob();
+            mob.x = 100;
+            mob.y = 30;
+            mob.init();
+            
+            
             var shader: Shader = new Shader(new SHADER() as ByteArray);
             playerLevel.blendShader = shader;
             playerLevel.blendMode = "shader";
@@ -66,6 +74,7 @@ package ludum.samples
             
             ToolKit.mainLevel.addChild(back); 
             ToolKit.mainLevel.addChild(playerLevel);
+            ToolKit.mainLevel.addChild(mob);
             
             tracer = new Tracer(player, bmp);
             tracer.init();
