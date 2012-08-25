@@ -1,5 +1,6 @@
 package ludum
 {
+    import abe.com.motion.Impulse;
     import abe.com.edia.states.UIStateMachine;
     import abe.com.mon.utils.StageUtils;
     import abe.com.patibility.lang._;
@@ -15,7 +16,7 @@ package ludum
     import ludum.states.PlayState;
     import ludum.states.StartState;
 
-    [SWF(backgroundColor="#ffffff", frameRate="30")]
+    [SWF(backgroundColor="#ffffff", frameRate="60")]
 	[Frame(factoryClass="ludum.boot.EvolutionBoot")]
     public class Evolution extends BootMain
     {
@@ -41,6 +42,8 @@ package ludum
             stateManager.addState( new StartState(), 'start');
             stateManager.addState( new PlayState(), 'play');
             stateManager.addState( new EndState(), 'end');
+            
+            Impulse.smoothFactor = 4;
             
             CONFIG::RELEASE {
                 FEATURES::MENU_CONTEXT {

@@ -1,0 +1,46 @@
+<languageVersion: 1.0;>
+kernel Invert
+<
+  namespace: "LudumDare";
+  vendor: "LudumDare";
+  version: 1;
+  description: "Realize a blend inversion with a third image as reference";
+>
+{
+  input image4 background;
+  input image4 foreground;
+
+  output pixel4 target;
+
+  void evaluatePixel()
+  {
+    float2 coords = outCoord();
+    pixel4 source = sampleNearest(foreground, coords);
+    pixel4 pixel = sampleNearest(background, coords);
+
+    float fmin = min(min(pixel.r, pixel.g), pixel.b);
+    float fmax = max(max(pixel.r, pixel.g), pixel.b);
+
+    float lum = (fmax + fmin) / 2.0; // Luminance
+
+    pixel4 inverse;
+    if (lum > 0.5 )
+    {
+      inverse = pixel4(source.r,source.g,source.b, source.a);
+    }
+    else
+    {
+      inverse = pixel4(1.0-source.r,1.0-source.g,1.0-source.b, source.a);
+    }
+
+
+    inverse = pixel4(
+      (inverse.r * inverse.a) + (pixel.r * (pixel.a-inverse.a)),
+      (inverse.g * inverse.a) + (pixel.g * (pixel.a-inverse.a)),
+      (inverse.b * inverse.a) + (pixel.b * (pixel.a-inverse.a)),
+      inverse.a + pixel.a
+    );
+
+    target = inverse;
+  }
+}
