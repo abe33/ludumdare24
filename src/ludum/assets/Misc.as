@@ -5,7 +5,7 @@ package ludum.assets
      */
     public class Misc
     {
-        [Embed(source='../../../assets/dummy_splats.png')]
+        [Embed(source='../../../assets/splatters.png')]
         static public const SPLATS: Class;
     }
 }

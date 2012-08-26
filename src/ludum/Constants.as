@@ -32,5 +32,9 @@ package ludum
         public static const MOUSE_LIMIT : Number = 0;
         public static const SPLATS_WIDTH : int = 128;
         public static const SPLATS_HEIGHT : int = 128;
+        public static const TRACE_PATH_MEMORY : Number = 10;
+        public static const TURN_THRESHOLD : Number = 1.4;
+        public static const BURST_TIMEOUT : Number = 500;
+        public static const PLAYER_STATE_SWITCH : Number = 10;
     }
 }

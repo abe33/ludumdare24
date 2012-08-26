@@ -1,12 +1,10 @@
 package ludum.effects
 {
-    import flash.geom.Matrix;
-    import abe.com.motion.Impulse;
-    import abe.com.mon.logs.Log;
     import abe.com.mon.core.Allocable;
     import abe.com.mon.geom.pt;
     import abe.com.mon.geom.rect;
     import abe.com.mon.utils.RandomUtils;
+    import abe.com.motion.Impulse;
     import abe.com.motion.ImpulseListener;
     import abe.com.ponents.allocators.EmbeddedBitmapAllocatorInstance;
 
@@ -20,72 +18,51 @@ package ludum.effects
     /**
      * @author cedric
      */
-    public class MobSplash extends Sprite implements Allocable, ImpulseListener
+    public class BurstSplash extends Sprite implements Allocable, ImpulseListener
     {
         private var spritesheet : Bitmap;
         private var spriteSplash : BitmapData;
-        private var spriteDrops : BitmapData;
         private var splashBmp : Bitmap;
-        private var dropsBmp : Bitmap;
         private var splashSprite : Sprite;
-        private var dropsSprite : Sprite;
-        private var _bitmap : BitmapData;
         private var _t : int;
-        
-        public function MobSplash (bitmap:BitmapData)
+        private var _bitmap : BitmapData;
+
+        public function BurstSplash ( bitmap : BitmapData )
         {
-            _bitmap = bitmap;
             init();
+            _bitmap = bitmap;
         }
 
         public function init () : void
         {
+            Impulse.register(tick);
             spritesheet = EmbeddedBitmapAllocatorInstance.get(Misc.SPLATS) as Bitmap;
             spriteSplash = new BitmapData(Constants.SPLATS_WIDTH, Constants.SPLATS_HEIGHT, true, 0);
-            spriteDrops = new BitmapData(Constants.SPLATS_WIDTH, Constants.SPLATS_HEIGHT, true, 0);
             var w : int = spritesheet.bitmapData.width / Constants.SPLATS_WIDTH;
-            spriteSplash.copyPixels(spritesheet.bitmapData, rect(RandomUtils.irandom(w)*Constants.SPLATS_WIDTH, Constants.SPLATS_HEIGHT, Constants.SPLATS_WIDTH, Constants.SPLATS_HEIGHT), pt());
-            spriteDrops.copyPixels(spritesheet.bitmapData, rect(RandomUtils.irandom(w)*Constants.SPLATS_WIDTH, 0, Constants.SPLATS_WIDTH, Constants.SPLATS_HEIGHT), pt());
+            spriteSplash.copyPixels(spritesheet.bitmapData, rect(RandomUtils.irandom(w)*Constants.SPLATS_WIDTH, Constants.SPLATS_HEIGHT*2, Constants.SPLATS_WIDTH, Constants.SPLATS_HEIGHT), pt());
                         
             splashBmp = new Bitmap(spriteSplash, 'auto', true);
-            dropsBmp = new Bitmap(spriteDrops, 'auto', true);
             
             splashSprite = new Sprite();
-            dropsSprite = new Sprite();
-            
-            splashBmp.x = -Constants.SPLATS_WIDTH/2;
+            splashBmp.x = -Constants.SPLATS_WIDTH;
             splashBmp.y = -Constants.SPLATS_HEIGHT/2;
-            dropsBmp.x = -Constants.SPLATS_WIDTH/2;
-            dropsBmp.y = -Constants.SPLATS_HEIGHT/2;
             
             splashSprite.addChild(splashBmp);
-            dropsSprite.addChild(dropsBmp);
             
             splashSprite.scaleX = .1;
             splashSprite.scaleY = .1;
-            splashSprite.rotation = RandomUtils.random(360);
-            
-            dropsSprite.scaleX = .1;
-            dropsSprite.scaleY = .1;
-            dropsSprite.rotation = RandomUtils.random(360);
-            dropsSprite.alpha = 0;
             
             _t = 0;        
             
             addChild(splashSprite);  
-            addChild(dropsSprite);  
-            
-            Impulse.register(tick);
         }
 
         public function dispose () : void
         {
             EmbeddedBitmapAllocatorInstance.release(spritesheet, Misc.SPLATS);
-            spriteDrops.dispose();
+            Impulse.unregister(tick);
             spriteSplash.dispose();
             removeChild(splashSprite);
-            removeChild(dropsSprite);
-            Impulse.unregister(tick);
         }
 
         public function tick ( bias : Number, biasInSeconds : Number, currentTime : Number ) : void
@@ -96,20 +73,13 @@ package ludum.effects
             {
                 splashSprite.scaleX = splashSprite.scaleY = 0.1 + ((_t/100) * (_t/100))*0.9;             
             }
-            if( _t > 25 && _t < 125 )
-            {
-                dropsSprite.alpha = 1;
-                dropsSprite.scaleX = dropsSprite.scaleY = 0.1 + (((_t-25)/100) * ((_t-25)/100))*0.9;             
-            }
             if( _t > 125 )
             {
-                var m:Matrix = new Matrix();
-                m.translate(x, y); 
-                _bitmap.draw(this, m);
+                _bitmap.draw(this, this.transform.matrix);
                 parent.removeChild(this);
                 dispose();
             }
-            _t += bias;
+            _t += bias;            
         }
     }
 }

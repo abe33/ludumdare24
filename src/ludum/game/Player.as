@@ -33,7 +33,10 @@ package ludum.game
         }
         
         public function get ratio () : Number {
-            return 0;
+            return whiteAmount - blackAmount;
+        }
+        public function get total () : Number {
+            return whiteAmount + blackAmount;
         }
 
         public function init () : void

@@ -2,7 +2,9 @@ package ludum.effects
 {
     import abe.com.mon.core.Allocable;
     import abe.com.mon.geom.pt;
+    import abe.com.mon.utils.MathUtils;
     import abe.com.mon.utils.PointUtils;
+    import abe.com.mon.utils.arrays.firstIn;
 
     import ludum.Constants;
 
@@ -28,6 +30,7 @@ package ludum.effects
         private var _brushesSizes: Array;
         private var _brushesLastSizes : Array;
         private var _brushesSizesFactor : Array;
+        private var _lastVec : Array;
         
         public function Tracer (target: DisplayObject, canvas: BitmapData)
         {
@@ -44,6 +47,7 @@ package ludum.effects
             _brushesSizes = [2,3,4];
             _brushesLastSizes = [2,3,4];
             _brushesSizesFactor = [.2, .4, .9];
+            _lastVec = [];
             _shape = new Shape();
         }
 
@@ -60,6 +64,7 @@ package ludum.effects
         {
             _shape.graphics.clear();
             currentPosition = pt(_target.x, _target.y);
+            var vec: Point = lastPosition.subtract(currentPosition);
             
             var l: int = _brushesPositions.length;
             for(var i:int=0; i<l; i++)
@@ -69,7 +74,26 @@ package ludum.effects
             
             _canvas.draw(_shape);
             
+            var oldVec:Point = firstIn(_lastVec);
+            
+            if(oldVec)
+            {
+	            var angle:Number = PointUtils.getAngle(vec, oldVec);
+                var tangeant : Number = Math.atan2(vec.y - oldVec.y, vec.x - oldVec.x);
+	            if( Math.abs(angle) > Constants.TURN_THRESHOLD )
+                {
+                    var splash : TraceSplash = new TraceSplash(_canvas);
+                    splash.x = _target.x;
+                    splash.y = _target.y;
+                    splash.rotation = MathUtils.rad2deg(tangeant +1.5 * (angle > 0 ? 1 : -1));
+                    _target.parent.addChildAt(splash, 0);
+                }
+            }
+            
             lastPosition = currentPosition;
+            _lastVec.push(vec);
+            if( _lastVec.length > Constants.TRACE_PATH_MEMORY )
+            	_lastVec.shift();
         }
 
         private function updateBrush ( i : int, b:Number ) : void

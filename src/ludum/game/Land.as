@@ -87,15 +87,6 @@ package ludum.game
             addChild(_bitmap);
 
             _scroller = new BitmapScroller(_bitmapData);
-            
-            CONFIG::DEBUG
-            {
-                var bmp: Bitmap = new Bitmap(_tileBuffer);
-                bmp.scaleX = 0.25;
-                bmp.scaleY = 0.25;
-                bmp.x = Constants.WIDTH - Constants.BACKGROUND_TILE_WIDTH/4;
-             	ToolKit.popupLevel.addChild(bmp);   
-            }
         }
 
         public function dispose () : void

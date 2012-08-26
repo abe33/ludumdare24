@@ -1,5 +1,7 @@
 package ludum.game
 {
+    import flash.display.BitmapData;
+    import ludum.effects.BurstSplash;
     import abe.com.mon.core.Allocable;
     import abe.com.mon.geom.pt;
     import abe.com.mon.utils.MathUtils;
@@ -20,6 +22,8 @@ package ludum.game
         public var player : Player;
         public var rotation : Number;
         private var _burst : Boolean;
+        private var _bitmap : BitmapData;
+        private var _burstTime : Number;
         
         public function PlayerController (player: Player)
         {
@@ -49,11 +53,27 @@ package ludum.game
 	            
 	            rotation = angle;          
             //}
+            
+            if(_burst)
+            {
+                _burstTime += bias;
+                if( _burstTime > Constants.BURST_TIMEOUT )
+                	_burst = false;
+            }
+            
 		    player.x += velocity.x * biasInSeconds;
 		    player.y += velocity.y * biasInSeconds;                
             
             velocity.x *= Constants.FRICTION;
             velocity.y *= Constants.FRICTION;
+            
+            if(player.ratio > Constants.PLAYER_STATE_SWITCH)
+            	player.view.gotoAndStop(3);
+            else if(player.ratio < -Constants.PLAYER_STATE_SWITCH)
+            	player.view.gotoAndStop(1);
+            else
+            	player.view.gotoAndStop(2);
+            
         }
 
         public function init () : void
@@ -73,16 +93,31 @@ package ludum.game
         
         private function mouseUP ( event : MouseEvent ) : void
         {
-            _burst = false;
+//            _burst = false;
         }
 
         private function mouseDown ( event : MouseEvent ) : void
         {
             var mouse : Point = pt(StageUtils.stage.mouseX,StageUtils.stage.mouseY);
             _burst = true;
+            _burstTime = 0;
             
             velocity = mouse.subtract(pt(player.x, player.y));
             velocity.normalize(Constants.BURST_SPEED);
+            
+            var splash: BurstSplash = new BurstSplash (_bitmap );
+            splash.x = player.x;
+            splash.y = player.y;
+            splash.rotation = player.view['_hero']['_body'].rotation;
+            player.parent.addChildAt(splash, 0);
+        }
+
+        public function get bitmap () : BitmapData {
+            return _bitmap;
+        }
+
+        public function set bitmap ( bitmap : BitmapData ) : void {
+            _bitmap = bitmap;
         }
     }
 }

@@ -35,7 +35,7 @@ package ludum.game
             var h: Number = spritesheet.height / Constants.MOB_SPRITE_HEIGHT;
             sprite = new BitmapData(Constants.MOB_SPRITE_WIDTH,Constants.MOB_SPRITE_HEIGHT, true, 0);
             
-            sprite.copyPixels(spritesheet, rect(RandomUtils.irandom(w),RandomUtils.irandom(h),Constants.MOB_SPRITE_WIDTH,Constants.MOB_SPRITE_HEIGHT), pt());
+            sprite.copyPixels(spritesheet, rect(RandomUtils.irandom(w-1)*Constants.MOB_SPRITE_WIDTH,RandomUtils.irandom(h-1)*Constants.MOB_SPRITE_HEIGHT,Constants.MOB_SPRITE_WIDTH,Constants.MOB_SPRITE_HEIGHT), pt());
             
             bmp = new Bitmap(sprite,PixelSnapping.AUTO, true);
             bmp.x = -Constants.MOB_SPRITE_WIDTH/2;
