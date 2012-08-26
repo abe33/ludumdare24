@@ -1,5 +1,7 @@
 package ludum.game
 {
+    import abe.com.motion.easing.Cubic;
+    import abe.com.motion.SingleTween;
     import flash.filters.DropShadowFilter;
     import abe.com.edia.particles.actions.ContactWithSurfaceDeathActionStrategy;
     import abe.com.edia.particles.actions.ForceActionStrategy;
@@ -102,7 +104,7 @@ package ludum.game
         public var gameEnded : Signal;
         private var _splashes : Array;
         private var progress : Sprite;
-        
+        private var _canInteract: Boolean;
         
         public function GameBoard () {
             gameEnded = new Signal();
@@ -111,8 +113,6 @@ package ludum.game
         public function init () : void
         {
             scrollRect = rect(0,0,Constants.WIDTH, Constants.HEIGHT);
-            
-			setTimeout(endGame, Constants.GAME_DURATION);
             
             _t = 0;
             boardMask = new Mask(); 
@@ -128,6 +128,7 @@ package ludum.game
             
             progress.x = Constants.WIDTH / 2;
             progress.y = Constants.HEIGHT;
+            progress['_prog'].scaleX = 0.001;            
             
             balance.gotoAndStop(50);
             balance.x = Constants.WIDTH / 2;
@@ -142,15 +143,14 @@ package ludum.game
             playerTrail = new Tracer(player, playerTrailBitmap);
             spawner = new Spawner(mobLevel, boardMask);
             
-            player.x = 100;
+            player.x = -20;
             player.y = 240;
             
             player.init();
             playerTrail.init();
             whiteLand.init();
             blackLand.init();
-            
-            
+                        
             player.controller.bitmap = playerTrailBitmap;
                         
             var shader: Shader = new Shader(new SHADER() as ByteArray);
@@ -172,6 +172,31 @@ package ludum.game
             initParticles();
             
             SoundManagerInstance.playSound("music", 0.5, 0, -1);
+            
+            DefaultTimedDisplayEffect, DropShadowFilter;
+            
+            new ShowMessage(
+            	"<fx:effect type='new abe.com.edia.text.fx.show::DefaultTimedDisplayEffect(20)'>"+
+	            	"<fx:filter type='new flash.filters::DropShadowFilter(0,0,0,1,4,4,2)'>"+
+	                	"<p align='center'>" +
+	                    	"<font color='0xffffff' size='24' face='Diogenes' embedFonts='true'>"+
+				                "This is your new mission.\n"+
+                                "Don't mess things up this time, try to keep the balance!"+
+	                        "</font>" +
+	                    "</p>" +
+	                "</fx:filter>"+
+                "</fx:effect>", 2500).execute();
+            
+            setTimeout(activatePlay, 3500);
+            setTimeout(function():void{
+                new SingleTween(player, "x", Constants.WIDTH/2, 1000, NaN, Cubic.easeOut).execute();
+            }, 2500);
+        }
+
+        private function activatePlay () : void
+        {
+            _canInteract = true;
+            setTimeout(endGame, Constants.GAME_DURATION);
         }
 
         private function endGame () : void
@@ -185,8 +210,7 @@ package ludum.game
 	            	"<fx:filter type='new flash.filters::DropShadowFilter(0,0,0,1,4,4,2)'>"+
 	                	"<p align='center'>" +
 	                    	"<font color='0xffffff' size='24' face='Diogenes' embedFonts='true'>"+
-				                "Allright, you can come back\n"+
-				                "your work on this world is complete."+
+				                "Congratulations!\nYour work on this world is now complete."+
 	                        "</font>" +
 	                    "</p>" +
 	                "</fx:filter>"+
@@ -304,26 +328,29 @@ package ludum.game
             playerTrailScroller.scroll(biasInSeconds);
             playerTrail.scroll(biasInSeconds);
             playerTrail.update(bias, biasInSeconds);
-            player.update(bias, biasInSeconds);
-            spawner.update(bias, biasInSeconds);
-                        
-            var scrollAmount: Number = Constants.SCROLL_RATE * biasInSeconds;
             
-            var a:Array = spawner.allMobs.concat();
-            for each(var mob:Mob in a)
+            if(_canInteract)
             {
-                mob.update(bias, biasInSeconds);
-                mob.x -= scrollAmount;
-                solveCollision(mob);
-                                
-                if( mob.x < Constants.SPAWN_OUT )
-                	spawner.release(mob);
+	            player.update(bias, biasInSeconds);
+	            spawner.update(bias, biasInSeconds);
+	                        
+	            var scrollAmount: Number = Constants.SCROLL_RATE * biasInSeconds;
+	            
+	            var a:Array = spawner.allMobs.concat();
+	            for each(var mob:Mob in a)
+	            {
+	                mob.update(bias, biasInSeconds);
+	                mob.x -= scrollAmount;
+	                solveCollision(mob);
+	                                
+	                if( mob.x < Constants.SPAWN_OUT )
+	                	spawner.release(mob);
+	            }
+	            progress['_prog'].scaleX = Math.min(_t/Constants.GAME_DURATION, 1);            
+	            _t += bias;
             }
                         
             boardMask.draw(maskShape);
-            
-            _t += bias;
-            progress['_prog'].scaleX = Math.min(_t/Constants.GAME_DURATION, 1);
         }
 
         private function solveCollision ( mob : Mob ) : void

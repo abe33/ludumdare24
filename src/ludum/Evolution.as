@@ -1,6 +1,5 @@
 package ludum
 {
-    import ludum.assets.Misc;
     import abe.com.edia.sounds.SoundManagerInstance;
     import abe.com.edia.states.UIStateMachine;
     import abe.com.mon.utils.StageUtils;
@@ -9,19 +8,23 @@ package ludum
     import abe.com.ponents.monitors.AllocatorGraphMonitor;
     import abe.com.ponents.monitors.GraphMonitorCaption;
     import abe.com.ponents.monitors.ParticleGraphMonitor;
+    import abe.com.ponents.skinning.SkinManagerInstance;
     import abe.com.ponents.skinning.icons.magicIconBuild;
     import abe.com.ponents.tabs.SimpleTab;
     import abe.com.ponents.utils.ToolKit;
 
+    import ludum.assets.Misc;
     import ludum.assets.Sounds;
+    import ludum.assets.UISkin;
     import ludum.boot.BootMain;
     import ludum.states.EndState;
     import ludum.states.PlayState;
     import ludum.states.StartState;
+    import ludum.states.StoryState;
 
     import flash.text.Font;
 
-    [SWF(backgroundColor="#ffffff", frameRate="60")]
+    [SWF(backgroundColor="#000000", frameRate="60")]
 	[Frame(factoryClass="ludum.boot.EvolutionBoot")]
     public class Evolution extends BootMain
     {
@@ -29,6 +32,7 @@ package ludum
         {
             return _instance.options;
         }
+        
         static protected var _instance : Evolution;
 		private var stateManager : UIStateMachine;
         
@@ -41,7 +45,10 @@ package ludum
         override public function init () : void
         {
             super.init ();
-            Font.registerFont(Misc.FONT);
+            Font.registerFont(Misc.DIOGENES);
+            Font.registerFont(Misc.GOTHAM);
+            SkinManagerInstance.registerMetaStyle( UISkin );
+            
             ToolKit.initializeToolKit ( this );
             
             SoundManagerInstance.addLibrarySound( Sounds.BACKGROUND_MUSIC, 	"music", 1 );
@@ -50,6 +57,7 @@ package ludum
             
             stateManager = new UIStateMachine();
             stateManager.addState( new StartState(), 'start');
+            stateManager.addState( new StoryState(), 'story');
             stateManager.addState( new PlayState(), 'play');
             stateManager.addState( new EndState(), 'end');
             

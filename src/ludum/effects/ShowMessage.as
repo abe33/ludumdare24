@@ -12,9 +12,7 @@ package ludum.effects
     import abe.com.mon.utils.StageUtils;
     import abe.com.ponents.utils.ToolKit;
 
-    import flash.display.Sprite;
     import flash.events.Event;
-    import flash.events.MouseEvent;
     import flash.geom.Rectangle;
 	/**
 	 * @author Cédric Néhémie
@@ -31,14 +29,16 @@ package ludum.effects
 		static public const SHOW_EFFECT_ID : String = "show";
 		static public const HIDE_EFFECT_ID : String = "hide";
 		
-		public var isActive : Boolean;
+        public var isActive : Boolean;
+        private var _y : Number;
 
-		public function ShowMessage ( message : String, commandEndTimeout : Number = 3000, autoHideLaunch : Boolean = false, ... args )
+		public function ShowMessage ( message : String, commandEndTimeout : Number = 3000, y:Number = NaN, autoHideLaunch : Boolean = false, ... args )
 		{
 			_message = message;
 			_commandEndTimeout = commandEndTimeout;
 			_autoHideLaunch = autoHideLaunch;
 			_args = args;
+            _y = y;
 			_txt = new AdvancedTextField();
 			
 			if( _commandEndTimeout != -1 )
@@ -67,8 +67,7 @@ package ludum.effects
 			var bb : Rectangle = _txt.getBounds( ToolKit.mainLevel );
 			
 			_txt.x = 20;
-			_txt.y = ( StageUtils.stage.stageHeight - _txt.height ) - bb.y - 20;
-
+			_txt.y = isNaN(_y) ? ((StageUtils.stage.stageHeight - _txt.height) - bb.y - 20) : _y;
 		}
 		protected function showMessage () : void
 		{	

@@ -6,13 +6,13 @@ package ludum.states
     import abe.com.edia.states.AbstractUIState;
     import abe.com.edia.states.UIState;
     import abe.com.mon.colors.Color;
-    import abe.com.mon.utils.StageUtils;
-    import abe.com.ponents.buttons.Button;
     import abe.com.ponents.utils.ToolKit;
 
-    import ludum.Constants;
+    import ludum.assets.Misc;
 
+    import flash.display.Bitmap;
     import flash.display.Sprite;
+    import flash.events.MouseEvent;
     import flash.utils.setTimeout;
 
     /**
@@ -20,8 +20,8 @@ package ludum.states
      */
     public class StartState extends AbstractUIState
     {
-        private var start : Button;
         private var gui : Sprite;
+        private var splash : Bitmap;
         public function StartState ()
         {
             super ();
@@ -31,34 +31,29 @@ package ludum.states
             new SimpleFadeIn(ToolKit.popupLevel, Color.Black).execute();
             
             gui = new Sprite();
-            start = new Button("Start");            
             
-            start.actionTriggered.add(play);
+            gui.addEventListener(MouseEvent.CLICK, play);
             
-            gui.addChild(start);
+            splash = new Misc.SPLASH() as Bitmap;
+            gui.addChild(splash);
             
             ToolKit.mainLevel.addChild(gui);
-
-            StageUtils.centerX(start);
-            start.y = Constants.HEIGHT - 120;
-            
+       
             SoundManagerInstance.playSound("loop", 0.5, 0, -1);
         }
 
         protected function play (... args) : void
         {
-            SoundManagerInstance.fadeSound('loop', 0, 500);
             new SimpleFadeOut(ToolKit.popupLevel, Color.Black).execute();
-            setTimeout(function():void{_manager.goto('play');}, 500);
+            setTimeout(function():void{_manager.goto('story');}, 500);
         }
 
         override public function release () : void
         {
-            start.actionTriggered.remove(play);
+            splash.bitmapData.dispose();
+            gui.removeEventListener(MouseEvent.CLICK,play);
             ToolKit.mainLevel.removeChild(gui);
             super.release ();
-            
-            SoundManagerInstance.stopSound('loop');
         }
     }
 }

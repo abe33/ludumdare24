@@ -24,6 +24,15 @@ package ludum.assets
         static public const BALANCE_FLASH: Class;
         
         [Embed(source="../../../assets/DIOGENES.ttf", fontName="Diogenes", embedAsCFF="false")]
-        static public var FONT : Class;
+        static public var DIOGENES : Class;
+        
+        [Embed(source="../../../assets/splashscreen/Gotham-Bold.otf", fontName="Gotham", embedAsCFF="false")]
+        static public var GOTHAM : Class;
+        
+        [Embed(source="../../../assets/splashscreen/splashscreen.png")]
+        static public var SPLASH : Class;
+        
+        [Embed(source="../../../assets/intro_scenes_01.jpg")]
+        static public var STORY : Class;
     }
 }

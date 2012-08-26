@@ -30,6 +30,7 @@ package ludum.boot
          * use -define+=CONFIG::MAIN_CLASS,"path.to::Class" as build option
          * to setup the concret entry point
          */ 
+                
         static protected var __mainClassName__ : String = CONFIG::MAIN_CLASS;
         
         private var _app : DisplayObject;
