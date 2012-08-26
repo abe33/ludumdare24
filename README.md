@@ -3,6 +3,7 @@
 Game realized in 48h for the [LudumDare 48h](http://ludumdare.com/) challenge.
 
 [See the website here](http://reuno.net/balance)
+
 [See the submission here](http://www.ludumdare.com/compo/ludum-dare-24/?action=preview&uid=4185)
 
 ### Credits
