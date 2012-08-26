@@ -43,8 +43,8 @@ package ludum
         public static const SPAWNING_COOLDOWN : Number = 500;
         public static const BURST_COOLDOWN : Number = 1500;
 
-        public static const GAME_DURATION : Number = 10 * 1000;
-//        public static const GAME_DURATION : Number = 3.7 * 60 * 1000;
-		public static const END_GAME_GAP : Number = 2500;
+//        public static const GAME_DURATION : Number = 10 * 1000;
+        public static const GAME_DURATION : Number = 3.7 * 60 * 1000;
+		public static const END_GAME_GAP : Number = 3500;
     }
 }

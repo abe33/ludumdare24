@@ -26,7 +26,7 @@ package ludum.game
             _allMobs = [];
             _t = 0;
             _quantity = 1;
-            _factor = 0.01;
+            _factor = 0.05;
             
         }
         public function update(bias: Number, biasInSeconds:Number):void
@@ -59,7 +59,7 @@ package ludum.game
                 _quantity -= 1;
             }
             _quantity += biasInSeconds * _factor;
-            _factor += biasInSeconds / 100;
+            _factor += biasInSeconds / 150;
         }
 
         public function get allMobs () : Array {

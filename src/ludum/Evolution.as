@@ -1,6 +1,6 @@
 package ludum
 {
-    import ludum.assets.Sounds;
+    import ludum.assets.Misc;
     import abe.com.edia.sounds.SoundManagerInstance;
     import abe.com.edia.states.UIStateMachine;
     import abe.com.mon.utils.StageUtils;
@@ -13,10 +13,13 @@ package ludum
     import abe.com.ponents.tabs.SimpleTab;
     import abe.com.ponents.utils.ToolKit;
 
+    import ludum.assets.Sounds;
     import ludum.boot.BootMain;
     import ludum.states.EndState;
     import ludum.states.PlayState;
     import ludum.states.StartState;
+
+    import flash.text.Font;
 
     [SWF(backgroundColor="#ffffff", frameRate="60")]
 	[Frame(factoryClass="ludum.boot.EvolutionBoot")]
@@ -38,6 +41,7 @@ package ludum
         override public function init () : void
         {
             super.init ();
+            Font.registerFont(Misc.FONT);
             ToolKit.initializeToolKit ( this );
             
             SoundManagerInstance.addLibrarySound( Sounds.BACKGROUND_MUSIC, 	"music", 1 );

@@ -22,5 +22,8 @@ package ludum.assets
         
         [Embed(source='../../../assets/swf/gfx.swf', symbol='gfx.Absorbe')]
         static public const BALANCE_FLASH: Class;
+        
+        [Embed(source="../../../assets/DIOGENES.ttf", fontName="Diogenes", embedAsCFF="false")]
+        static public var FONT : Class;
     }
 }

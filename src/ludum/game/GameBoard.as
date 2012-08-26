@@ -1,5 +1,6 @@
 package ludum.game
 {
+    import flash.filters.DropShadowFilter;
     import abe.com.edia.particles.actions.ContactWithSurfaceDeathActionStrategy;
     import abe.com.edia.particles.actions.ForceActionStrategy;
     import abe.com.edia.particles.actions.FrictionActionStrategy;
@@ -177,15 +178,19 @@ package ludum.game
         {
             spawner.stop();
             
-            DefaultTimedDisplayEffect;
+            DefaultTimedDisplayEffect, DropShadowFilter;
             
             new ShowMessage(
             	"<fx:effect type='new abe.com.edia.text.fx.show::DefaultTimedDisplayEffect(20)'>"+
-                	"<p align='center'>" +
-		                "Allright, you can come back\n"+
-		                "your work on this world is complete."+
-                    "</p>" +
-                "</fx:effect>", 2000).execute();
+	            	"<fx:filter type='new flash.filters::DropShadowFilter(0,0,0,1,4,4,2)'>"+
+	                	"<p align='center'>" +
+	                    	"<font color='0xffffff' size='24' face='Diogenes' embedFonts='true'>"+
+				                "Allright, you can come back\n"+
+				                "your work on this world is complete."+
+	                        "</font>" +
+	                    "</p>" +
+	                "</fx:filter>"+
+                "</fx:effect>", 3000).execute();
             
             setTimeout(function():void {
 	            gameEnded.dispatch(this);
