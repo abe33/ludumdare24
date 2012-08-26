@@ -61,7 +61,7 @@ package ludum
                 ToolKit.debugPanel.addTab ( new SimpleTab ( _("Allocators"), alloc ) );
             }
             
-            stateManager.goto("play");
+            stateManager.goto("start");
         }
     }
 }

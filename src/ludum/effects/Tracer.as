@@ -31,6 +31,7 @@ package ludum.effects
         private var _brushesLastSizes : Array;
         private var _brushesSizesFactor : Array;
         private var _lastVec : Array;
+        private var _splashes:Array;
         
         public function Tracer (target: DisplayObject, canvas: BitmapData)
         {
@@ -49,10 +50,13 @@ package ludum.effects
             _brushesSizesFactor = [.2, .4, .9];
             _lastVec = [];
             _shape = new Shape();
+            _splashes = [];
         }
 
         public function dispose () : void
         {
+ 			for each( var s :TraceSplash in _splashes)
+            	s.dispose();           
         }
 
         public function scroll ( bias : Number ) : void
@@ -87,6 +91,7 @@ package ludum.effects
                     splash.y = _target.y;
                     splash.rotation = MathUtils.rad2deg(tangeant +1.5 * (angle > 0 ? 1 : -1));
                     _target.parent.addChildAt(splash, 0);
+                    _splashes.push(splash);
                 }
             }
             
