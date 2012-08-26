@@ -16,5 +16,11 @@ package ludum.assets
        
         [Embed(source='../../../assets/swf/gfx.swf', symbol='gfx.Parts')]
         static public const MOB_PARTICLES: Class;
+        
+        [Embed(source='../../../assets/swf/gfx.swf', symbol='gfx.ProgBar')]
+        static public const PROGRESS_BAR: Class;
+        
+        [Embed(source='../../../assets/swf/gfx.swf', symbol='gfx.Absorbe')]
+        static public const BALANCE_FLASH: Class;
     }
 }

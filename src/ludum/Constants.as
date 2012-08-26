@@ -26,7 +26,7 @@ package ludum
         public static const MAX_BRUSHES_SIZE : Number = 12;
         public static const BRUSHES_ROTATION_SPEED : Number = 5;
         public static const SPLIT_BALANCE : Number = 180;
-        
+         
         public static const MOB_SPRITE_WIDTH : Number = 32;
         public static const MOB_SPRITE_HEIGHT : Number = 32;
         public static const COLLISION_DISTANCE : Number = 30;
@@ -39,7 +39,12 @@ package ludum
         public static const TURN_THRESHOLD : Number = 1.4;
         public static const BURST_TIMEOUT : Number = 500;
         public static const PLAYER_STATE_SWITCH : Number = 10;
-//        public static const GAME_DURATION : Number = 10 * 1000;
-        public static const GAME_DURATION : Number = 3.5 * 60 * 1000;
+        public static const SPAWNING_FACTOR : Number = 0.5;
+        public static const SPAWNING_COOLDOWN : Number = 500;
+        public static const BURST_COOLDOWN : Number = 1500;
+
+        public static const GAME_DURATION : Number = 10 * 1000;
+//        public static const GAME_DURATION : Number = 3.7 * 60 * 1000;
+		public static const END_GAME_GAP : Number = 2500;
     }
 }

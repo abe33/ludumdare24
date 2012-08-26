@@ -1,9 +1,7 @@
 package ludum.states
 {
-    import flash.net.URLVariables;
-    import abe.com.ponents.utils.Inspect;
-    import abe.com.mon.logs.Log;
     import abe.com.edia.commands.SimpleFadeIn;
+    import abe.com.edia.sounds.SoundManagerInstance;
     import abe.com.edia.states.AbstractUIState;
     import abe.com.edia.states.UIState;
     import abe.com.mon.colors.Color;
@@ -18,6 +16,7 @@ package ludum.states
     import flash.net.URLLoader;
     import flash.net.URLRequest;
     import flash.net.URLRequestMethod;
+    import flash.net.URLVariables;
     import flash.net.navigateToURL;
     import flash.ui.Mouse;
 
@@ -38,19 +37,21 @@ package ludum.states
             
             Mouse.show();
             var player : Player = (previousState as PlayState).board.player;
-                        
-            var vars : URLVariables = new URLVariables();
-            vars.total = player.total;
-            vars.white = player.whiteAmount;
-            vars.black = player.blackAmount;
             
-            var request: URLRequest = new URLRequest(StageUtils.root.loaderInfo.parameters.callbackURL);
-            request.method = URLRequestMethod.POST;
-            request.data = vars;
-            
-            var loader:URLLoader = new URLLoader();
-            loader.load(request);   
-            
+            CONFIG::RELEASE
+            {     
+	            var vars : URLVariables = new URLVariables();
+	            vars.total = player.total;
+	            vars.white = player.whiteAmount;
+	            vars.black = player.blackAmount;
+	            
+	            var request: URLRequest = new URLRequest(StageUtils.root.loaderInfo.parameters.callbackURL);
+	            request.method = URLRequestMethod.POST;
+	            request.data = vars;
+	            
+	            var loader:URLLoader = new URLLoader();
+	            loader.load(request);   
+            }
             new SimpleFadeIn(ToolKit.popupLevel, Color.Black).execute();
             
             gui = new Sprite();
@@ -63,6 +64,8 @@ package ludum.states
 
             StageUtils.centerX(continueBt);
             continueBt.y = Constants.HEIGHT - 120;
+            
+            SoundManagerInstance.playSound("loop", 0.5, 0, -1);
         }
 
         protected function submit (... args) : void
@@ -84,6 +87,7 @@ package ludum.states
             continueBt.actionTriggered.remove(submit);
             ToolKit.mainLevel.removeChild(gui);
             super.release ();
+            SoundManagerInstance.stopSound('loop');
         }
     }
 }
