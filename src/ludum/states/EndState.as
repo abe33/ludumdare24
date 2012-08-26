@@ -1,7 +1,8 @@
 package ludum.states
 {
-    import flash.ui.Mouse;
-    import flash.net.navigateToURL;
+    import flash.net.URLVariables;
+    import abe.com.ponents.utils.Inspect;
+    import abe.com.mon.logs.Log;
     import abe.com.edia.commands.SimpleFadeIn;
     import abe.com.edia.states.AbstractUIState;
     import abe.com.edia.states.UIState;
@@ -14,8 +15,11 @@ package ludum.states
     import ludum.game.Player;
 
     import flash.display.Sprite;
+    import flash.net.URLLoader;
     import flash.net.URLRequest;
     import flash.net.URLRequestMethod;
+    import flash.net.navigateToURL;
+    import flash.ui.Mouse;
 
     /**
      * @author cedric
@@ -31,13 +35,21 @@ package ludum.states
         }
         override public function activate ( previousState : UIState ) : void
         {
+            
             Mouse.show();
             var player : Player = (previousState as PlayState).board.player;
-            stats = {
-                total: player.total,
-                white: player.whiteAmount,
-                black: player.blackAmount
-            };
+                        
+            var vars : URLVariables = new URLVariables();
+            vars.total = player.total;
+            vars.white = player.whiteAmount;
+            vars.black = player.blackAmount;
+            
+            var request: URLRequest = new URLRequest(StageUtils.root.loaderInfo.parameters.callbackURL);
+            request.method = URLRequestMethod.POST;
+            request.data = vars;
+            
+            var loader:URLLoader = new URLLoader();
+            loader.load(request);   
             
             new SimpleFadeIn(ToolKit.popupLevel, Color.Black).execute();
             
@@ -57,11 +69,9 @@ package ludum.states
         {
             CONFIG::RELEASE
             {
-	            var request: URLRequest = new URLRequest(StageUtils.root.loaderInfo.parameters.callbackURL);
-                request.method = URLRequestMethod.POST;
-                request.data = stats;
+	            var request: URLRequest = new URLRequest(StageUtils.root.loaderInfo.parameters.redirectURL);
                 
-                navigateToURL(request);
+                navigateToURL(request, "_self");
             }
             CONFIG::DEBUG
             {
