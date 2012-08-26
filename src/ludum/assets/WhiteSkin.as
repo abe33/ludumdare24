@@ -10,5 +10,9 @@ package ludum.assets
         
        	[Embed(source='../../../assets/white/world-1-white-enemies.png')]
         static public const MOB_SPRITESHEET: Class;
+        
+        [Embed(source='../../../assets/white/world-1-white-elements.png')]
+        static public const PROPS_SPRITESHEET: Class;
     }
 }
+ 

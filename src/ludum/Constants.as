@@ -10,6 +10,10 @@ package ludum
                 
         static public const BACKGROUND_TILE_WIDTH: int = 384;
         static public const BACKGROUND_TILE_HEIGHT : int = 96;
+        
+        static public const BACKGROUND_PROPS_WIDTH: int = 256;
+        static public const BACKGROUND_PROPS_HEIGHT : int = 256;
+        
 
         static public const SCROLL_RATE: Number = 200;
         

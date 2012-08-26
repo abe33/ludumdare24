@@ -1,7 +1,7 @@
 package ludum.game
 {
-    import abe.com.edia.particles.display.discShape;
-    import abe.com.edia.particles.actions.AlphaLifeTweenActionStrategy;
+    import abe.com.edia.particles.actions.ContactWithSurfaceDeathActionStrategy;
+    import abe.com.edia.particles.actions.ForceActionStrategy;
     import abe.com.edia.particles.actions.FrictionActionStrategy;
     import abe.com.edia.particles.actions.LifeActionStrategy;
     import abe.com.edia.particles.actions.MacroActionStrategy;
@@ -10,28 +10,39 @@ package ludum.game
     import abe.com.edia.particles.complex.VelocitySpitter;
     import abe.com.edia.particles.core.BaseParticleSystem;
     import abe.com.edia.particles.core.DisplayObjectParticle;
-    import abe.com.edia.particles.display.blurryDotFromGradient;
+    import abe.com.edia.particles.core.Particle;
+    import abe.com.edia.particles.counters.ByRateCounter;
+    import abe.com.edia.particles.counters.FixedCounter;
+    import abe.com.edia.particles.display.discShape;
+    import abe.com.edia.particles.display.squareShape;
     import abe.com.edia.particles.emissions.Emission;
+    import abe.com.edia.particles.emitters.PathEmitter;
+    import abe.com.edia.particles.emitters.PointEmitter;
     import abe.com.edia.particles.initializers.DisplayObjectInitializer;
+    import abe.com.edia.particles.initializers.ExplosionInitializer;
     import abe.com.edia.particles.initializers.LifeInitializer;
     import abe.com.edia.particles.initializers.MacroInitializer;
     import abe.com.edia.particles.initializers.RandomizePositionInitializer;
     import abe.com.edia.particles.initializers.RandomizeVelocityInitializer;
+    import abe.com.edia.particles.initializers.StreamInitializer;
     import abe.com.edia.particles.timers.InfiniteTimer;
+    import abe.com.edia.particles.timers.InstantTimer;
     import abe.com.mon.colors.Color;
-    import abe.com.mon.colors.Gradient;
     import abe.com.mon.core.Allocable;
     import abe.com.mon.core.Suspendable;
+    import abe.com.mon.geom.LinearSpline;
+    import abe.com.mon.geom.Rectangle2;
     import abe.com.mon.geom.pt;
     import abe.com.mon.geom.rect;
     import abe.com.mon.geom.tmpPt;
+    import abe.com.mon.utils.RandomUtils;
     import abe.com.motion.Impulse;
     import abe.com.motion.ImpulseListener;
     import abe.com.motion.easing.Quad;
-    import abe.com.ponents.utils.ToolKit;
 
     import ludum.Constants;
     import ludum.assets.BlackSkin;
+    import ludum.assets.Misc;
     import ludum.assets.WhiteSkin;
     import ludum.effects.BitmapScroller;
     import ludum.effects.MobSplash;
@@ -39,9 +50,11 @@ package ludum.game
 
     import flash.display.Bitmap;
     import flash.display.BitmapData;
+    import flash.display.MovieClip;
     import flash.display.Shader;
     import flash.display.Shape;
     import flash.display.Sprite;
+    import flash.filters.BlurFilter;
     import flash.geom.Point;
     import flash.utils.ByteArray;
 
@@ -68,8 +81,12 @@ package ludum.game
         private var playerTrailScroller : BitmapScroller;
         private var mobLevel : Sprite;
         private var spawner : Spawner;
-        private var system : BaseParticleSystem;
+        private var playerSystem : BaseParticleSystem;
         private var particleLevel : Sprite;
+        private var mobSystem : BaseParticleSystem;
+        private var dustSystem : BaseParticleSystem;
+        private var balance : MovieClip;
+        
         
         public function GameBoard () {}
 
@@ -82,6 +99,12 @@ package ludum.game
             playerLevel = new Sprite();
             mobLevel = new Sprite();
             particleLevel = new Sprite();
+            balance = new Misc.BALANCE() as MovieClip;
+            
+            balance.gotoAndStop(50);
+            balance.x = Constants.WIDTH / 2;
+            balance.y = Constants.HEIGHT;
+            balance.scaleX = balance.scaleY = .35;
             
             player = new Player();            
             whiteLand = new Land(WhiteSkin);
@@ -110,6 +133,7 @@ package ludum.game
             blackLand.mask = maskShape;
             addChild(mobLevel);
             addChild(playerLevel);
+            addChild(balance);
             playerLevel.addChild(new Bitmap(playerTrailBitmap));
             playerLevel.addChild(particleLevel);
             playerLevel.addChild(player);
@@ -119,9 +143,9 @@ package ludum.game
 
         private function initParticles () : void
         {
-            var v : VelocitySpitter = new VelocitySpitter( player, 150, 0.001, .5 );
+            var v : VelocitySpitter = new VelocitySpitter( player, 150, 0.001, 1 );
             
-            system = new BaseParticleSystem( 
+            playerSystem = new BaseParticleSystem( 
             	new MacroInitializer(
                 	new DisplayObjectInitializer(discShape(3, Color.Black), particleLevel),
                     new LifeInitializer(500, 1500),
@@ -132,24 +156,62 @@ package ludum.game
             	new MacroActionStrategy(
                 	new LifeActionStrategy(),
                     new MoveActionStrategy(),
-                    new FrictionActionStrategy(),
+                    new FrictionActionStrategy(.93),
                     new ScaleLifeTweenActionStrategy(pt(1,1), pt(0.2,0.2), Quad.easeOut)
                 ) 
+            );
+            mobSystem = new BaseParticleSystem( 
+            	new MacroInitializer(
+                	new DisplayObjectInitializer(discShape(3, Color.Black), particleLevel),
+                    new LifeInitializer(500, 1500),
+                    new RandomizePositionInitializer(),
+                    new ExplosionInitializer(200, 300),
+                    new RandomizeVelocityInitializer(Math.PI/6,10)
+                ),
+            	new MacroActionStrategy(
+                	new LifeActionStrategy(),
+                    new MoveActionStrategy(),
+                    new ForceActionStrategy(pt(-Constants.SCROLL_RATE*4,0)),
+                    new FrictionActionStrategy(.93),
+                    new ScaleLifeTweenActionStrategy(pt(1,1), pt(0.2,0.2), Quad.easeOut)
+                ) 
+            );
+            dustSystem = new BaseParticleSystem(
+            	new MacroInitializer(
+                	new DisplayObjectInitializer(function(p:Particle):Shape{
+                        var s: Shape = squareShape(RandomUtils.irangeAB(10,30),1, Color.Black)(p);
+                        s.filters = [new BlurFilter(RandomUtils.irangeAB(3,6), 2)];
+                        return s;
+                    }, particleLevel),
+                    new StreamInitializer(pt(-Constants.SCROLL_RATE*8), 10)                    
+                ),
+                new MacroActionStrategy(
+                	new MoveActionStrategy(),
+                    new ContactWithSurfaceDeathActionStrategy(new Rectangle2(-50,0,50,Constants.HEIGHT))
+                )
             );
             
             
             var emission : Emission = new Emission(
-	            	DisplayObjectParticle, v, new InfiniteTimer(), v
+	            DisplayObjectParticle, v, new InfiniteTimer(), v
             );
-            system.emit(emission ); 
-        }
+            playerSystem.emit(emission); 
+            
+            emission = new Emission(
+	            DisplayObjectParticle, 
+                new PathEmitter(new LinearSpline([pt(Constants.WIDTH + 50, 0), pt(Constants.WIDTH+50, Constants.HEIGHT)])), 
+                new InfiniteTimer(),
+                new ByRateCounter(8)
+            );
+            dustSystem.emit(emission); 
+        } 
 
         public function dispose () : void
         {
             boardMask = null;
             maskShape = null;
-            system.stop();
-            system.dispose();
+            playerSystem.stop();
+            playerSystem.dispose();
             player.dispose();
             whiteLand.dispose();
             blackLand.dispose();
@@ -175,10 +237,10 @@ package ludum.game
             var a : Array = spawner.allMobs.concat();
             for each(var mob:Mob in a)
             {
+                mob.update(bias, biasInSeconds);
                 mob.x -= scrollAmount;
                 solveCollision(mob);
-                
-                
+                                
                 if( mob.x < Constants.SPAWN_OUT )
                 	spawner.release(mob);
             }
@@ -195,11 +257,23 @@ package ludum.game
                 playerLevel.addChildAt(splash, 0);
                 splash.x = mob.x;
                 splash.y = mob.y;
+                
+                var emission : Emission = new Emission(
+	            	DisplayObjectParticle, 
+                    new PointEmitter(pt(mob.x, mob.y)), 
+                    new InstantTimer(), 
+                    new FixedCounter(RandomUtils.irangeAB(10, 20))
+	            );
+	            mobSystem.emit(emission);
+                
             	spawner.release(mob);
+                
                 if(mob is WhiteMob)
                 	player.whiteAmount++;
                 else 
                 	player.blackAmount++;
+                  
+                balance.gotoAndStop(50 - Math.max(-50, Math.min(50, player.ratio*2)));
             }
         }
 
