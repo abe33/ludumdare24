@@ -45,13 +45,11 @@ package ludum.game
           	xplosion.stop();
             xplosion.parent.removeChild(xplosion); 
             xplosion = null;
-            
         }
 
         public function tick ( bias : Number, biasInSeconds : Number, currentTime : Number ) : void
         {
             xplosion.x -= Constants.SCROLL_RATE * biasInSeconds;
         }
-
     }
 }

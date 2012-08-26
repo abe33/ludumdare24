@@ -1,5 +1,7 @@
 package ludum.game
 {
+    import abe.com.mon.colors.Color;
+    import abe.com.edia.commands.ColorFlash;
     import flash.display.BitmapData;
     import ludum.effects.BurstSplash;
     import abe.com.mon.core.Allocable;
@@ -24,7 +26,8 @@ package ludum.game
         private var _burst : Boolean;
         private var _bitmap : BitmapData;
         private var _burstTime : Number;
-        private var _splashes: Array;
+        private var _splashes : Array;
+        private var _burstCoolDown : Number;
         
         public function PlayerController (player: Player)
         {
@@ -59,7 +62,16 @@ package ludum.game
             {
                 _burstTime += bias;
                 if( _burstTime > Constants.BURST_TIMEOUT )
+                {
                 	_burst = false;
+                    _burstCoolDown = Constants.BURST_COOLDOWN;
+                }
+            }
+            else if(_burstCoolDown > 0)
+            {
+                _burstCoolDown -= bias;
+                if( _burstCoolDown <= 0 )
+                	new ColorFlash(player, Color.White, false, 200).execute();
             }
             
 		    player.x += velocity.x * biasInSeconds;
@@ -81,6 +93,7 @@ package ludum.game
         {
             _splashes = [];
             rotation = 0;
+            _burstCoolDown = 0;
             velocity = new Point();
             StageUtils.stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseDown);
             StageUtils.stage.addEventListener(MouseEvent.MOUSE_UP, mouseUP);
@@ -102,18 +115,21 @@ package ludum.game
 
         private function mouseDown ( event : MouseEvent ) : void
         {
-            var mouse : Point = pt(StageUtils.stage.mouseX,StageUtils.stage.mouseY);
-            _burst = true;
-            _burstTime = 0;
-            
-            velocity = mouse.subtract(pt(player.x, player.y));
-            velocity.normalize(Constants.BURST_SPEED);
-            
-            var splash: BurstSplash = new BurstSplash (_bitmap );
-            splash.x = player.x;
-            splash.y = player.y;
-            splash.rotation = player.view['_hero']['_body'].rotation;
-            player.parent.addChildAt(splash, 0);
+            if( _burstCoolDown <= 0 && !_burst )
+            {
+	            var mouse : Point = pt(StageUtils.stage.mouseX,StageUtils.stage.mouseY);
+	            _burst = true;
+	            _burstTime = 0;
+	            
+	            velocity = mouse.subtract(pt(player.x, player.y));
+	            velocity.normalize(Constants.BURST_SPEED);
+	            
+	            var splash: BurstSplash = new BurstSplash (_bitmap );
+	            splash.x = player.x;
+	            splash.y = player.y;
+	            splash.rotation = player.view['_hero']['_body'].rotation;
+	            player.parent.addChildAt(splash, 0);
+            }
         }
 
         public function get bitmap () : BitmapData {

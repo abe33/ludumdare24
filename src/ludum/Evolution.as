@@ -1,8 +1,10 @@
 package ludum
 {
-    import abe.com.motion.Impulse;
+    import ludum.assets.Sounds;
+    import abe.com.edia.sounds.SoundManagerInstance;
     import abe.com.edia.states.UIStateMachine;
     import abe.com.mon.utils.StageUtils;
+    import abe.com.motion.Impulse;
     import abe.com.patibility.lang._;
     import abe.com.ponents.monitors.AllocatorGraphMonitor;
     import abe.com.ponents.monitors.GraphMonitorCaption;
@@ -37,6 +39,10 @@ package ludum
         {
             super.init ();
             ToolKit.initializeToolKit ( this );
+            
+            SoundManagerInstance.addLibrarySound( Sounds.BACKGROUND_MUSIC, 	"music", 1 );
+            SoundManagerInstance.addLibrarySound( Sounds.LOOP, "loop", 1);
+            SoundManagerInstance.addLibrarySound( Sounds.SWOOSH,	"swoosh",	4 );
             
             stateManager = new UIStateMachine();
             stateManager.addState( new StartState(), 'start');

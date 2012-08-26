@@ -6,6 +6,7 @@ package ludum.game
     import abe.com.edia.particles.actions.LifeActionStrategy;
     import abe.com.edia.particles.actions.MacroActionStrategy;
     import abe.com.edia.particles.actions.MoveActionStrategy;
+    import abe.com.edia.particles.actions.RotateActionStrategy;
     import abe.com.edia.particles.actions.ScaleLifeTweenActionStrategy;
     import abe.com.edia.particles.complex.VelocitySpitter;
     import abe.com.edia.particles.core.BaseParticleSystem;
@@ -28,6 +29,8 @@ package ludum.game
     import abe.com.edia.particles.initializers.StreamInitializer;
     import abe.com.edia.particles.timers.InfiniteTimer;
     import abe.com.edia.particles.timers.InstantTimer;
+    import abe.com.edia.sounds.SoundManagerInstance;
+    import abe.com.edia.text.fx.show.DefaultTimedDisplayEffect;
     import abe.com.mon.colors.Color;
     import abe.com.mon.core.Allocable;
     import abe.com.mon.core.Suspendable;
@@ -47,6 +50,7 @@ package ludum.game
     import ludum.assets.WhiteSkin;
     import ludum.effects.BitmapScroller;
     import ludum.effects.MobSplash;
+    import ludum.effects.ShowMessage;
     import ludum.effects.Tracer;
 
     import org.osflash.signals.Signal;
@@ -74,6 +78,7 @@ package ludum.game
         static public const Red: Color = new Color("#D13D2F"); 
         
         protected var _running : Boolean;
+        protected var _t:Number;
         
         public var boardMask : Mask;
         public var player : Player;
@@ -95,6 +100,7 @@ package ludum.game
         private var effectsLevel : Sprite;
         public var gameEnded : Signal;
         private var _splashes : Array;
+        private var progress : Sprite;
         
         
         public function GameBoard () {
@@ -107,6 +113,7 @@ package ludum.game
             
 			setTimeout(endGame, Constants.GAME_DURATION);
             
+            _t = 0;
             boardMask = new Mask(); 
             maskShape = new Shape();
             playerLevel = new Sprite();
@@ -114,12 +121,17 @@ package ludum.game
             particleLevel = new Sprite();
             effectsLevel = new Sprite();
             balance = new Misc.BALANCE() as MovieClip;
+            progress = new Misc.PROGRESS_BAR() as Sprite;
+				
             _splashes = [];
+            
+            progress.x = Constants.WIDTH / 2;
+            progress.y = Constants.HEIGHT;
             
             balance.gotoAndStop(50);
             balance.x = Constants.WIDTH / 2;
-            balance.y = Constants.HEIGHT;
-            balance.scaleX = balance.scaleY = .35;
+            balance.scaleX = balance.scaleY = .4;
+            balance.y = Constants.HEIGHT-8;
             
             player = new Player();            
             whiteLand = new Land(WhiteSkin);
@@ -137,6 +149,7 @@ package ludum.game
             whiteLand.init();
             blackLand.init();
             
+            
             player.controller.bitmap = playerTrailBitmap;
                         
             var shader: Shader = new Shader(new SHADER() as ByteArray);
@@ -149,17 +162,34 @@ package ludum.game
             addChild(mobLevel);
             addChild(playerLevel);
             addChild(effectsLevel);
+            addChild(progress);
             addChild(balance);
             playerLevel.addChild(new Bitmap(playerTrailBitmap));
             playerLevel.addChild(particleLevel);
             playerLevel.addChild(player);
             
             initParticles();
+            
+            SoundManagerInstance.playSound("music", 0.5, 0, -1);
         }
 
         private function endGame () : void
         {
-            gameEnded.dispatch(this);
+            spawner.stop();
+            
+            DefaultTimedDisplayEffect;
+            
+            new ShowMessage(
+            	"<fx:effect type='new abe.com.edia.text.fx.show::DefaultTimedDisplayEffect(20)'>"+
+                	"<p align='center'>" +
+		                "Allright, you can come back\n"+
+		                "your work on this world is complete."+
+                    "</p>" +
+                "</fx:effect>", 2000).execute();
+            
+            setTimeout(function():void {
+	            gameEnded.dispatch(this);
+            }, Constants.END_GAME_GAP);
         }
 
         private function initParticles () : void
@@ -200,6 +230,7 @@ package ludum.game
                 	new LifeActionStrategy(),
                     new MoveActionStrategy(),
                     new ForceActionStrategy(pt(-Constants.SCROLL_RATE*4,0)),
+                    new RotateActionStrategy(-180, 180),
                     new FrictionActionStrategy(.93),
                     new ScaleLifeTweenActionStrategy(pt(1,1), pt(0.2,0.2), Quad.easeOut)
                 ) 
@@ -248,12 +279,14 @@ package ludum.game
             mobSystem.dispose();
             dustSystem.stop();
             dustSystem.dispose();
-            
+                        
             for each(var s:MobSplash in _splashes)
             	s.dispose();
             
             boardMask = null;
             maskShape = null;
+            
+            SoundManagerInstance.stopSound('music');
         }
 
         public function tick ( bias : Number, biasInSeconds : Number, currentTime : Number ) : void
@@ -268,10 +301,10 @@ package ludum.game
             playerTrail.update(bias, biasInSeconds);
             player.update(bias, biasInSeconds);
             spawner.update(bias, biasInSeconds);
-            
+                        
             var scrollAmount: Number = Constants.SCROLL_RATE * biasInSeconds;
             
-            var a : Array = spawner.allMobs.concat();
+            var a:Array = spawner.allMobs.concat();
             for each(var mob:Mob in a)
             {
                 mob.update(bias, biasInSeconds);
@@ -283,6 +316,9 @@ package ludum.game
             }
                         
             boardMask.draw(maskShape);
+            
+            _t += bias;
+            progress['_prog'].scaleX = Math.min(_t/Constants.GAME_DURATION, 1);
         }
 
         private function solveCollision ( mob : Mob ) : void
@@ -306,6 +342,17 @@ package ludum.game
 	            );
                 
                 var xplosion: MobExplode = new MobExplode(effectsLevel, mob);
+                var absorb: MobAbsorb = new MobAbsorb(balance, mob);
+                if(mob is WhiteMob)
+                {
+	                absorb.view.x =  balance['_bad'].x;                   
+	                absorb.view.y =  balance['_bad'].y;                   
+                }
+                else
+                {
+                    absorb.view.x =  balance['_good'].x;                   
+	                absorb.view.y =  balance['_good'].y;  
+                }
                 
 	            mobSystem.emit(emission);
                 
@@ -317,6 +364,8 @@ package ludum.game
                 	player.blackAmount++;
                   
                 balance.gotoAndStop(50 - Math.max(-50, Math.min(50, player.ratio*2)));
+                
+                SoundManagerInstance.playSound("swoosh", 0.7, 0, 0);
             }
         }
 

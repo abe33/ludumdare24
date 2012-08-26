@@ -36,7 +36,7 @@ package ludum.states
         private function endGame (... args) : void
         {
             new SimpleFadeOut(ToolKit.popupLevel, Color.Black);
-            setTimeout(function():void{_manager.goto('end')}, 500);
+            setTimeout(function():void{_manager.goto('end');}, 500);
         }
          
         override public function release () : void
