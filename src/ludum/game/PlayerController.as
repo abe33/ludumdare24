@@ -24,6 +24,7 @@ package ludum.game
         private var _burst : Boolean;
         private var _bitmap : BitmapData;
         private var _burstTime : Number;
+        private var _splashes: Array;
         
         public function PlayerController (player: Player)
         {
@@ -78,6 +79,7 @@ package ludum.game
 
         public function init () : void
         {
+            _splashes = [];
             rotation = 0;
             velocity = new Point();
             StageUtils.stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseDown);
@@ -86,6 +88,8 @@ package ludum.game
 
         public function dispose () : void
         {
+            for each(var s : BurstSplash in _splashes)
+            	s.dispose();
             velocity = null;
             StageUtils.stage.removeEventListener(MouseEvent.MOUSE_DOWN, mouseDown);
             StageUtils.stage.removeEventListener(MouseEvent.MOUSE_UP, mouseUP);

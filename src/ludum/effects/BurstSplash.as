@@ -59,6 +59,8 @@ package ludum.effects
 
         public function dispose () : void
         {
+            if(!contains(splashSprite)) return;
+            
             EmbeddedBitmapAllocatorInstance.release(spritesheet, Misc.SPLATS);
             Impulse.unregister(tick);
             spriteSplash.dispose();

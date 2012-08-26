@@ -14,7 +14,6 @@ package ludum
         static public const BACKGROUND_PROPS_WIDTH: int = 256;
         static public const BACKGROUND_PROPS_HEIGHT : int = 256;
         
-
         static public const SCROLL_RATE: Number = 200;
         
         public static const MOTION_SMOOTHNESS : Number = 1;
@@ -40,5 +39,7 @@ package ludum
         public static const TURN_THRESHOLD : Number = 1.4;
         public static const BURST_TIMEOUT : Number = 500;
         public static const PLAYER_STATE_SWITCH : Number = 10;
+//        public static const GAME_DURATION : Number = 10 * 1000;
+        public static const GAME_DURATION : Number = 3.5 * 60 * 1000;
     }
 }

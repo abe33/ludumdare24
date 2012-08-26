@@ -1,12 +1,10 @@
 package ludum.effects
 {
-    import flash.geom.Matrix;
-    import abe.com.motion.Impulse;
-    import abe.com.mon.logs.Log;
     import abe.com.mon.core.Allocable;
     import abe.com.mon.geom.pt;
     import abe.com.mon.geom.rect;
     import abe.com.mon.utils.RandomUtils;
+    import abe.com.motion.Impulse;
     import abe.com.motion.ImpulseListener;
     import abe.com.ponents.allocators.EmbeddedBitmapAllocatorInstance;
 
@@ -16,6 +14,7 @@ package ludum.effects
     import flash.display.Bitmap;
     import flash.display.BitmapData;
     import flash.display.Sprite;
+    import flash.geom.Matrix;
 
     /**
      * @author cedric
@@ -80,6 +79,8 @@ package ludum.effects
 
         public function dispose () : void
         {
+            if(!contains(splashSprite)) return;
+            
             EmbeddedBitmapAllocatorInstance.release(spritesheet, Misc.SPLATS);
             spriteDrops.dispose();
             spriteSplash.dispose();

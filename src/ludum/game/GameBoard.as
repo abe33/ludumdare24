@@ -1,61 +1,66 @@
 package ludum.game
 {
-	import abe.com.edia.particles.actions.ContactWithSurfaceDeathActionStrategy;
-	import abe.com.edia.particles.actions.ForceActionStrategy;
-	import abe.com.edia.particles.actions.FrictionActionStrategy;
-	import abe.com.edia.particles.actions.LifeActionStrategy;
-	import abe.com.edia.particles.actions.MacroActionStrategy;
-	import abe.com.edia.particles.actions.MoveActionStrategy;
-	import abe.com.edia.particles.actions.ScaleLifeTweenActionStrategy;
-	import abe.com.edia.particles.complex.VelocitySpitter;
-	import abe.com.edia.particles.core.BaseParticleSystem;
-	import abe.com.edia.particles.core.DisplayObjectParticle;
-	import abe.com.edia.particles.core.Particle;
-	import abe.com.edia.particles.counters.ByRateCounter;
-	import abe.com.edia.particles.counters.FixedCounter;
-	import abe.com.edia.particles.display.discShape;
-	import abe.com.edia.particles.display.squareShape;
-	import abe.com.edia.particles.emissions.Emission;
-	import abe.com.edia.particles.emitters.PathEmitter;
-	import abe.com.edia.particles.emitters.PointEmitter;
-	import abe.com.edia.particles.initializers.DisplayObjectInitializer;
-	import abe.com.edia.particles.initializers.ExplosionInitializer;
-	import abe.com.edia.particles.initializers.LifeInitializer;
-	import abe.com.edia.particles.initializers.MacroInitializer;
-	import abe.com.edia.particles.initializers.RandomizePositionInitializer;
-	import abe.com.edia.particles.initializers.RandomizeVelocityInitializer;
-	import abe.com.edia.particles.initializers.StreamInitializer;
-	import abe.com.edia.particles.timers.InfiniteTimer;
-	import abe.com.edia.particles.timers.InstantTimer;
-	import abe.com.mon.colors.Color;
-	import abe.com.mon.core.Allocable;
-	import abe.com.mon.core.Suspendable;
-	import abe.com.mon.geom.LinearSpline;
-	import abe.com.mon.geom.Rectangle2;
-	import abe.com.mon.geom.pt;
-	import abe.com.mon.geom.rect;
-	import abe.com.mon.geom.tmpPt;
-	import abe.com.mon.utils.RandomUtils;
-	import abe.com.motion.Impulse;
-	import abe.com.motion.ImpulseListener;
-	import abe.com.motion.easing.Quad;
-	import ludum.Constants;
-	import ludum.assets.BlackSkin;
-	import ludum.assets.Misc;
-	import ludum.assets.WhiteSkin;
-	import ludum.effects.BitmapScroller;
-	import ludum.effects.MobSplash;
-	import ludum.effects.Tracer;
-	import flash.display.Bitmap;
-	import flash.display.BitmapData;
-	import flash.display.MovieClip;
-	import flash.display.Shader;
-	import flash.display.Shape;
-	import flash.display.Sprite;
-	import flash.events.Event;
-	import flash.filters.BlurFilter;
-	import flash.geom.Point;
-	import flash.utils.ByteArray;
+    import abe.com.edia.particles.actions.ContactWithSurfaceDeathActionStrategy;
+    import abe.com.edia.particles.actions.ForceActionStrategy;
+    import abe.com.edia.particles.actions.FrictionActionStrategy;
+    import abe.com.edia.particles.actions.LifeActionStrategy;
+    import abe.com.edia.particles.actions.MacroActionStrategy;
+    import abe.com.edia.particles.actions.MoveActionStrategy;
+    import abe.com.edia.particles.actions.ScaleLifeTweenActionStrategy;
+    import abe.com.edia.particles.complex.VelocitySpitter;
+    import abe.com.edia.particles.core.BaseParticleSystem;
+    import abe.com.edia.particles.core.DisplayObjectParticle;
+    import abe.com.edia.particles.core.Particle;
+    import abe.com.edia.particles.counters.ByRateCounter;
+    import abe.com.edia.particles.counters.FixedCounter;
+    import abe.com.edia.particles.display.discShape;
+    import abe.com.edia.particles.display.squareShape;
+    import abe.com.edia.particles.emissions.Emission;
+    import abe.com.edia.particles.emitters.PathEmitter;
+    import abe.com.edia.particles.emitters.PointEmitter;
+    import abe.com.edia.particles.initializers.DisplayObjectInitializer;
+    import abe.com.edia.particles.initializers.ExplosionInitializer;
+    import abe.com.edia.particles.initializers.LifeInitializer;
+    import abe.com.edia.particles.initializers.MacroInitializer;
+    import abe.com.edia.particles.initializers.ParasiteInitializer;
+    import abe.com.edia.particles.initializers.RandomizePositionInitializer;
+    import abe.com.edia.particles.initializers.RandomizeVelocityInitializer;
+    import abe.com.edia.particles.initializers.StreamInitializer;
+    import abe.com.edia.particles.timers.InfiniteTimer;
+    import abe.com.edia.particles.timers.InstantTimer;
+    import abe.com.mon.colors.Color;
+    import abe.com.mon.core.Allocable;
+    import abe.com.mon.core.Suspendable;
+    import abe.com.mon.geom.LinearSpline;
+    import abe.com.mon.geom.Rectangle2;
+    import abe.com.mon.geom.pt;
+    import abe.com.mon.geom.rect;
+    import abe.com.mon.geom.tmpPt;
+    import abe.com.mon.utils.RandomUtils;
+    import abe.com.motion.Impulse;
+    import abe.com.motion.ImpulseListener;
+    import abe.com.motion.easing.Quad;
+
+    import ludum.Constants;
+    import ludum.assets.BlackSkin;
+    import ludum.assets.Misc;
+    import ludum.assets.WhiteSkin;
+    import ludum.effects.BitmapScroller;
+    import ludum.effects.MobSplash;
+    import ludum.effects.Tracer;
+
+    import org.osflash.signals.Signal;
+
+    import flash.display.Bitmap;
+    import flash.display.BitmapData;
+    import flash.display.MovieClip;
+    import flash.display.Shader;
+    import flash.display.Shape;
+    import flash.display.Sprite;
+    import flash.filters.BlurFilter;
+    import flash.geom.Point;
+    import flash.utils.ByteArray;
+    import flash.utils.setTimeout;
 
     /**
      * @author cedric
@@ -88,13 +93,19 @@ package ludum.game
         private var dustSystem : BaseParticleSystem;
         private var balance : MovieClip;
         private var effectsLevel : Sprite;
+        public var gameEnded : Signal;
+        private var _splashes : Array;
         
         
-        public function GameBoard () {}
+        public function GameBoard () {
+            gameEnded = new Signal();
+        }
 
         public function init () : void
         {
             scrollRect = rect(0,0,Constants.WIDTH, Constants.HEIGHT);
+            
+			setTimeout(endGame, Constants.GAME_DURATION);
             
             boardMask = new Mask(); 
             maskShape = new Shape();
@@ -103,6 +114,7 @@ package ludum.game
             particleLevel = new Sprite();
             effectsLevel = new Sprite();
             balance = new Misc.BALANCE() as MovieClip;
+            _splashes = [];
             
             balance.gotoAndStop(50);
             balance.x = Constants.WIDTH / 2;
@@ -145,10 +157,14 @@ package ludum.game
             initParticles();
         }
 
+        private function endGame () : void
+        {
+            gameEnded.dispatch(this);
+        }
+
         private function initParticles () : void
         {
             var v : VelocitySpitter = new VelocitySpitter( player, 150, 0.001, 1 );
-            
             playerSystem = new BaseParticleSystem( 
             	new MacroInitializer(
                 	new DisplayObjectInitializer(discShape(3, Color.Black), particleLevel),
@@ -166,7 +182,15 @@ package ludum.game
             );
             mobSystem = new BaseParticleSystem( 
             	new MacroInitializer(
-                	new DisplayObjectInitializer(discShape(3, Color.Black), particleLevel),
+                	new DisplayObjectInitializer(function(p:Particle):MovieClip{
+                        var mc : MovieClip = new Misc.MOB_PARTICLES() as MovieClip;
+                        var isGood: Boolean = p.getParasite('mob');
+                        var c : Color = isGood ? Blue : Red;
+                        mc.gotoAndStop((isGood ? 1 : 5) + RandomUtils.irandom(4));
+                        mc.transform.colorTransform = c.toColorTransform(1);
+                        mc.rotation = RandomUtils.irandom(360);
+                        return mc;
+                    }, effectsLevel),
                     new LifeInitializer(500, 1500),
                     new RandomizePositionInitializer(),
                     new ExplosionInitializer(200, 300),
@@ -212,15 +236,24 @@ package ludum.game
 
         public function dispose () : void
         {
-            boardMask = null;
-            maskShape = null;
+            Impulse.unregister(tick);
             playerSystem.stop();
             playerSystem.dispose();
             player.dispose();
             whiteLand.dispose();
             blackLand.dispose();
-            playerTrailBitmap.dispose();
             playerTrail.dispose();
+            playerTrailBitmap.dispose();
+            mobSystem.stop();
+            mobSystem.dispose();
+            dustSystem.stop();
+            dustSystem.dispose();
+            
+            for each(var s:MobSplash in _splashes)
+            	s.dispose();
+            
+            boardMask = null;
+            maskShape = null;
         }
 
         public function tick ( bias : Number, biasInSeconds : Number, currentTime : Number ) : void
@@ -262,11 +295,14 @@ package ludum.game
                 splash.x = mob.x;
                 splash.y = mob.y;
                 
+                _splashes.push(splash);
+                
                 var emission : Emission = new Emission(
 	            	DisplayObjectParticle, 
                     new PointEmitter(pt(mob.x, mob.y)), 
                     new InstantTimer(), 
-                    new FixedCounter(RandomUtils.irangeAB(10, 20))
+                    new FixedCounter(RandomUtils.irangeAB(8, 16)),
+                    new ParasiteInitializer('mob', mob is WhiteMob)
 	            );
                 
                 var xplosion: MobExplode = new MobExplode(effectsLevel, mob);
