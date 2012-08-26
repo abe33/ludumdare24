@@ -68,11 +68,11 @@ package ludum.game
             velocity.y *= Constants.FRICTION;
             
             if(player.ratio > Constants.PLAYER_STATE_SWITCH)
-            	player.view.gotoAndStop(3);
+            	player.view.gotoAndStop(2);
             else if(player.ratio < -Constants.PLAYER_STATE_SWITCH)
             	player.view.gotoAndStop(1);
             else
-            	player.view.gotoAndStop(2);
+            	player.view.gotoAndStop(3);
             
         }
 

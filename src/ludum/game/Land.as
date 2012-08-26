@@ -1,10 +1,9 @@
 package ludum.game
 {
-    import abe.com.mon.logs.Log;
     import abe.com.mon.core.Allocable;
     import abe.com.mon.geom.pt;
     import abe.com.mon.geom.rect;
-    import abe.com.ponents.utils.ToolKit;
+    import abe.com.mon.utils.RandomUtils;
 
     import ludum.Constants;
     import ludum.effects.BitmapScroller;
@@ -24,7 +23,8 @@ package ludum.game
         private var _bitmap : Bitmap;
         private var _tileBuffer: BitmapData;
         private var _scrollAmount: Number;
-        private var _scroller: BitmapScroller;
+        private var _scroller : BitmapScroller;
+        private var _bgProps : BitmapData;
                 
         public function Land (skin: Object)
         {
@@ -71,12 +71,38 @@ package ludum.game
                                             Constants.BACKGROUND_TILE_HEIGHT), 
                                        pt(0, row * Constants.BACKGROUND_TILE_HEIGHT));
             }
+            if(RandomUtils.boolean())
+            {
+                row = RandomUtils.irangeAB(0, 1);
+                col = RandomUtils.irandom(_bgProps.width / Constants.BACKGROUND_PROPS_WIDTH);
+                if(row == 0)
+                {
+                    _tileBuffer.copyPixels(_bgProps, 
+                    					   rect(col * Constants.BACKGROUND_PROPS_WIDTH, 
+                                           		row * Constants.BACKGROUND_PROPS_HEIGHT,
+                                                Constants.BACKGROUND_PROPS_WIDTH,
+                                                Constants.BACKGROUND_PROPS_HEIGHT), 
+                                           pt(RandomUtils.irandom(Constants.BACKGROUND_TILE_WIDTH-Constants.BACKGROUND_PROPS_WIDTH)),
+                                           null, null, true);
+                }
+                else
+                {
+                    _tileBuffer.copyPixels(_bgProps, 
+                    					   rect(col * Constants.BACKGROUND_PROPS_WIDTH, 
+                                           		row * Constants.BACKGROUND_PROPS_HEIGHT,
+                                                Constants.BACKGROUND_PROPS_WIDTH,
+                                                Constants.BACKGROUND_PROPS_HEIGHT), 
+                                           pt(RandomUtils.irandom(Constants.BACKGROUND_TILE_WIDTH-Constants.BACKGROUND_PROPS_WIDTH), Constants.HEIGHT/2),
+                                           null, null, true);
+                }
+            }
         }
         
         public function init () : void
         {
             _scrollAmount = 0;
             _bgSprite = (new _skin.BACKGROUND() as Bitmap).bitmapData;
+            _bgProps = (new _skin.PROPS_SPRITESHEET() as Bitmap).bitmapData;
             _bitmapData = new BitmapData(Constants.WIDTH, Constants.HEIGHT);
    	        _tileBuffer = new BitmapData(Constants.BACKGROUND_TILE_WIDTH, Constants.BACKGROUND_TILE_HEIGHT * 5);
             

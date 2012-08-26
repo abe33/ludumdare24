@@ -1,5 +1,6 @@
 package ludum.game
 {
+    import abe.com.motion.ImpulseListener;
     import flash.display.PixelSnapping;
     import abe.com.mon.logs.Log;
     import abe.com.mon.core.Allocable;
@@ -51,6 +52,10 @@ package ludum.game
             
             spritesheet = null;
             sprite = null;
+        }
+        public function update(bias:Number, biasInSeconds:Number):void
+        {
+            
         }
     }
 }

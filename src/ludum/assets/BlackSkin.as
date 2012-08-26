@@ -10,5 +10,8 @@ package ludum.assets
         
         [Embed(source='../../../assets/black/world-1-black-enemies.png')]
         static public const MOB_SPRITESHEET: Class;
+        
+        [Embed(source='../../../assets/black/dummy_bg_props.png')]
+        static public const PROPS_SPRITESHEET: Class;
     }
 }
