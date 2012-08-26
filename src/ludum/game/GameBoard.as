@@ -1,62 +1,61 @@
 package ludum.game
 {
-    import abe.com.edia.particles.actions.ContactWithSurfaceDeathActionStrategy;
-    import abe.com.edia.particles.actions.ForceActionStrategy;
-    import abe.com.edia.particles.actions.FrictionActionStrategy;
-    import abe.com.edia.particles.actions.LifeActionStrategy;
-    import abe.com.edia.particles.actions.MacroActionStrategy;
-    import abe.com.edia.particles.actions.MoveActionStrategy;
-    import abe.com.edia.particles.actions.ScaleLifeTweenActionStrategy;
-    import abe.com.edia.particles.complex.VelocitySpitter;
-    import abe.com.edia.particles.core.BaseParticleSystem;
-    import abe.com.edia.particles.core.DisplayObjectParticle;
-    import abe.com.edia.particles.core.Particle;
-    import abe.com.edia.particles.counters.ByRateCounter;
-    import abe.com.edia.particles.counters.FixedCounter;
-    import abe.com.edia.particles.display.discShape;
-    import abe.com.edia.particles.display.squareShape;
-    import abe.com.edia.particles.emissions.Emission;
-    import abe.com.edia.particles.emitters.PathEmitter;
-    import abe.com.edia.particles.emitters.PointEmitter;
-    import abe.com.edia.particles.initializers.DisplayObjectInitializer;
-    import abe.com.edia.particles.initializers.ExplosionInitializer;
-    import abe.com.edia.particles.initializers.LifeInitializer;
-    import abe.com.edia.particles.initializers.MacroInitializer;
-    import abe.com.edia.particles.initializers.RandomizePositionInitializer;
-    import abe.com.edia.particles.initializers.RandomizeVelocityInitializer;
-    import abe.com.edia.particles.initializers.StreamInitializer;
-    import abe.com.edia.particles.timers.InfiniteTimer;
-    import abe.com.edia.particles.timers.InstantTimer;
-    import abe.com.mon.colors.Color;
-    import abe.com.mon.core.Allocable;
-    import abe.com.mon.core.Suspendable;
-    import abe.com.mon.geom.LinearSpline;
-    import abe.com.mon.geom.Rectangle2;
-    import abe.com.mon.geom.pt;
-    import abe.com.mon.geom.rect;
-    import abe.com.mon.geom.tmpPt;
-    import abe.com.mon.utils.RandomUtils;
-    import abe.com.motion.Impulse;
-    import abe.com.motion.ImpulseListener;
-    import abe.com.motion.easing.Quad;
-
-    import ludum.Constants;
-    import ludum.assets.BlackSkin;
-    import ludum.assets.Misc;
-    import ludum.assets.WhiteSkin;
-    import ludum.effects.BitmapScroller;
-    import ludum.effects.MobSplash;
-    import ludum.effects.Tracer;
-
-    import flash.display.Bitmap;
-    import flash.display.BitmapData;
-    import flash.display.MovieClip;
-    import flash.display.Shader;
-    import flash.display.Shape;
-    import flash.display.Sprite;
-    import flash.filters.BlurFilter;
-    import flash.geom.Point;
-    import flash.utils.ByteArray;
+	import abe.com.edia.particles.actions.ContactWithSurfaceDeathActionStrategy;
+	import abe.com.edia.particles.actions.ForceActionStrategy;
+	import abe.com.edia.particles.actions.FrictionActionStrategy;
+	import abe.com.edia.particles.actions.LifeActionStrategy;
+	import abe.com.edia.particles.actions.MacroActionStrategy;
+	import abe.com.edia.particles.actions.MoveActionStrategy;
+	import abe.com.edia.particles.actions.ScaleLifeTweenActionStrategy;
+	import abe.com.edia.particles.complex.VelocitySpitter;
+	import abe.com.edia.particles.core.BaseParticleSystem;
+	import abe.com.edia.particles.core.DisplayObjectParticle;
+	import abe.com.edia.particles.core.Particle;
+	import abe.com.edia.particles.counters.ByRateCounter;
+	import abe.com.edia.particles.counters.FixedCounter;
+	import abe.com.edia.particles.display.discShape;
+	import abe.com.edia.particles.display.squareShape;
+	import abe.com.edia.particles.emissions.Emission;
+	import abe.com.edia.particles.emitters.PathEmitter;
+	import abe.com.edia.particles.emitters.PointEmitter;
+	import abe.com.edia.particles.initializers.DisplayObjectInitializer;
+	import abe.com.edia.particles.initializers.ExplosionInitializer;
+	import abe.com.edia.particles.initializers.LifeInitializer;
+	import abe.com.edia.particles.initializers.MacroInitializer;
+	import abe.com.edia.particles.initializers.RandomizePositionInitializer;
+	import abe.com.edia.particles.initializers.RandomizeVelocityInitializer;
+	import abe.com.edia.particles.initializers.StreamInitializer;
+	import abe.com.edia.particles.timers.InfiniteTimer;
+	import abe.com.edia.particles.timers.InstantTimer;
+	import abe.com.mon.colors.Color;
+	import abe.com.mon.core.Allocable;
+	import abe.com.mon.core.Suspendable;
+	import abe.com.mon.geom.LinearSpline;
+	import abe.com.mon.geom.Rectangle2;
+	import abe.com.mon.geom.pt;
+	import abe.com.mon.geom.rect;
+	import abe.com.mon.geom.tmpPt;
+	import abe.com.mon.utils.RandomUtils;
+	import abe.com.motion.Impulse;
+	import abe.com.motion.ImpulseListener;
+	import abe.com.motion.easing.Quad;
+	import ludum.Constants;
+	import ludum.assets.BlackSkin;
+	import ludum.assets.Misc;
+	import ludum.assets.WhiteSkin;
+	import ludum.effects.BitmapScroller;
+	import ludum.effects.MobSplash;
+	import ludum.effects.Tracer;
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
+	import flash.display.MovieClip;
+	import flash.display.Shader;
+	import flash.display.Shape;
+	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.filters.BlurFilter;
+	import flash.geom.Point;
+	import flash.utils.ByteArray;
 
     /**
      * @author cedric
@@ -66,6 +65,8 @@ package ludum.game
         [Embed(source='../shaders/invert.pbj', mimeType="application/octet-stream")]
         private var SHADER:Class; 
         
+        static public const Blue: Color = new Color("#2FB1D1"); 
+        static public const Red: Color = new Color("#D13D2F"); 
         
         protected var _running : Boolean;
         
@@ -86,6 +87,7 @@ package ludum.game
         private var mobSystem : BaseParticleSystem;
         private var dustSystem : BaseParticleSystem;
         private var balance : MovieClip;
+        private var effectsLevel : Sprite;
         
         
         public function GameBoard () {}
@@ -99,6 +101,7 @@ package ludum.game
             playerLevel = new Sprite();
             mobLevel = new Sprite();
             particleLevel = new Sprite();
+            effectsLevel = new Sprite();
             balance = new Misc.BALANCE() as MovieClip;
             
             balance.gotoAndStop(50);
@@ -109,7 +112,7 @@ package ludum.game
             player = new Player();            
             whiteLand = new Land(WhiteSkin);
             blackLand = new Land(BlackSkin);
-            playerTrailBitmap = new BitmapData(Constants.WIDTH, Constants.HEIGHT, true, 0x00000000);
+            playerTrailBitmap = new BitmapData(Constants.WIDTH+150, Constants.HEIGHT, true, 0x00000000);
             playerTrailScroller = new BitmapScroller(playerTrailBitmap);
             playerTrail = new Tracer(player, playerTrailBitmap);
             spawner = new Spawner(mobLevel, boardMask);
@@ -133,6 +136,7 @@ package ludum.game
             blackLand.mask = maskShape;
             addChild(mobLevel);
             addChild(playerLevel);
+            addChild(effectsLevel);
             addChild(balance);
             playerLevel.addChild(new Bitmap(playerTrailBitmap));
             playerLevel.addChild(particleLevel);
@@ -179,8 +183,8 @@ package ludum.game
             dustSystem = new BaseParticleSystem(
             	new MacroInitializer(
                 	new DisplayObjectInitializer(function(p:Particle):Shape{
-                        var s: Shape = squareShape(RandomUtils.irangeAB(10,30),1, Color.Black)(p);
-                        s.filters = [new BlurFilter(RandomUtils.irangeAB(3,6), 2)];
+                        var s: Shape = squareShape(RandomUtils.irangeAB(10,30),1, Color.Black.alphaClone(0xcc))(p);
+                        s.filters = [new BlurFilter(RandomUtils.irangeAB(3,6), 3)];
                         return s;
                     }, particleLevel),
                     new StreamInitializer(pt(-Constants.SCROLL_RATE*8), 10)                    
@@ -264,6 +268,9 @@ package ludum.game
                     new InstantTimer(), 
                     new FixedCounter(RandomUtils.irangeAB(10, 20))
 	            );
+                
+                var xplosion: MobExplode = new MobExplode(effectsLevel, mob);
+                
 	            mobSystem.emit(emission);
                 
             	spawner.release(mob);

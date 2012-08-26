@@ -23,6 +23,7 @@ package ludum.game
         private var spritesheet : BitmapData;
         private var sprite : BitmapData;
         private var bmp : Bitmap;
+        private var _t : int;
         
         public function Mob ()
         {
@@ -42,6 +43,8 @@ package ludum.game
             bmp.x = -Constants.MOB_SPRITE_WIDTH/2;
             bmp.y = -Constants.MOB_SPRITE_HEIGHT/2;
             addChild(bmp);
+            
+            _t = 0;
         }
 
         public function dispose () : void
@@ -55,7 +58,10 @@ package ludum.game
         }
         public function update(bias:Number, biasInSeconds:Number):void
         {
+            _t+= bias;
             
+            scaleX = 1 + Math.sin(_t/100) * 0.1;            
+            scaleY = 1 + Math.cos(_t/100) * 0.1;            
         }
     }
 }

@@ -6,6 +6,8 @@ package ludum.game
     import abe.com.mon.utils.RandomUtils;
 
     import ludum.Constants;
+    import ludum.assets.BlackSkin;
+    import ludum.assets.WhiteSkin;
     import ludum.effects.BitmapScroller;
 
     import flash.display.Bitmap;
@@ -77,22 +79,24 @@ package ludum.game
                 col = RandomUtils.irandom(_bgProps.width / Constants.BACKGROUND_PROPS_WIDTH);
                 if(row == 0)
                 {
+                    var y : Number = _skin == BlackSkin ? 70 : 0;
                     _tileBuffer.copyPixels(_bgProps, 
                     					   rect(col * Constants.BACKGROUND_PROPS_WIDTH, 
                                            		row * Constants.BACKGROUND_PROPS_HEIGHT,
                                                 Constants.BACKGROUND_PROPS_WIDTH,
                                                 Constants.BACKGROUND_PROPS_HEIGHT), 
-                                           pt(RandomUtils.irandom(Constants.BACKGROUND_TILE_WIDTH-Constants.BACKGROUND_PROPS_WIDTH)),
+                                           pt(RandomUtils.irandom(Constants.BACKGROUND_TILE_WIDTH-Constants.BACKGROUND_PROPS_WIDTH), y),
                                            null, null, true);
                 }
                 else
                 {
+                    y = _skin == WhiteSkin ? Constants.HEIGHT/2 - 70 : Constants.HEIGHT/2;
                     _tileBuffer.copyPixels(_bgProps, 
                     					   rect(col * Constants.BACKGROUND_PROPS_WIDTH, 
                                            		row * Constants.BACKGROUND_PROPS_HEIGHT,
                                                 Constants.BACKGROUND_PROPS_WIDTH,
                                                 Constants.BACKGROUND_PROPS_HEIGHT), 
-                                           pt(RandomUtils.irandom(Constants.BACKGROUND_TILE_WIDTH-Constants.BACKGROUND_PROPS_WIDTH), Constants.HEIGHT/2),
+                                           pt(RandomUtils.irandom(Constants.BACKGROUND_TILE_WIDTH-Constants.BACKGROUND_PROPS_WIDTH), y),
                                            null, null, true);
                 }
             }

@@ -10,5 +10,8 @@ package ludum.assets
         
         [Embed(source='../../../assets/swf/gfx.swf', symbol='gfx.Balance')]
         static public const BALANCE: Class;
+        
+        [Embed(source='../../../assets/swf/gfx.swf', symbol='gfx.Explode')]
+        static public const MOB_EXPLOSION: Class;
     }
 }

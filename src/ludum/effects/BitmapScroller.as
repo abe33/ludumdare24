@@ -19,7 +19,7 @@ package ludum.effects
         public function scroll(bias:Number) : void
         {
             var amount: Number = Math.floor(Constants.SCROLL_RATE * bias);
-            var pos : Number = Constants.WIDTH - amount;
+            var pos : Number = bitmap.width - amount;
 	        bitmap.copyPixels(bitmap, rect(amount, 0, pos, Constants.HEIGHT), pt());        
 	        bitmap.fillRect(rect(pos, 0, amount, Constants.HEIGHT), 0x00000000);        
         }
