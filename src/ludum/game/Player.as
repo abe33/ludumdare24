@@ -41,8 +41,8 @@ package ludum.game
 
         public function init () : void
         {
-            whiteAmount = 1;
-            blackAmount = 1;
+            whiteAmount = 0;
+            blackAmount = 0;
             controller = new PlayerController(this);
             controller.init();
             
