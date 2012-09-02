@@ -51,7 +51,7 @@ package ludum.game
             var a: Array = _curve.vertices;
             for each(var pt:Point in a)
             {
-                pt.x -= Constants.SCROLL_RATE * biasInSecond;
+                pt.x -= Math.floor(Constants.SCROLL_RATE * biasInSecond);
             }
             
             if( a[0].x < _redrawLimit)
