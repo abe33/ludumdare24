@@ -1,5 +1,9 @@
 package ludum.states
 {
+    import abe.com.mon.utils.RandomUtils;
+    import ludum.game.BlackMob;
+    import ludum.game.WhiteMob;
+    import ludum.game.Mob;
     import abe.com.edia.commands.SimpleFadeIn;
     import abe.com.edia.sounds.SoundManagerInstance;
     import abe.com.edia.states.AbstractUIState;
@@ -45,7 +49,7 @@ package ludum.states
             
             Mouse.show();
             
-	        var player : Player = (previousState as PlayState).board.player;
+	        var player : Object = previousState ? (previousState as PlayState).board.player : {whiteAmount:20, blackAmount: 80, total: 100};
             CONFIG::RELEASE
             {     
 	            var vars : URLVariables = new URLVariables();
@@ -65,7 +69,6 @@ package ludum.states
             gui = new Sprite();
             story = new Misc.STORY() as Bitmap;
             
-            gui.addChild(story);
             continueBt = new UIButton("<b>CONTINUE</b>");            
             continueBt.actionTriggered.add(submit);
             
@@ -74,7 +77,6 @@ package ludum.states
             continueBt.x = Constants.WIDTH-150;
             continueBt.y = Constants.HEIGHT;
             
-            gui.addChild(continueBt);
             
             ToolKit.mainLevel.addChild(gui);
             
@@ -87,13 +89,29 @@ package ludum.states
 		                	"<p align='center'>" +
 		                    	"<font color='0xffffff' size='24' face='Diogenes' embedFonts='true'>"+
 					                "That's great!\n"+
-									"You've destroyed <font color='#2FB1D1'>"+ player.whiteAmount +"</font> cute fellows and <font color='#D13D2F'>"+ player.blackAmount +"</font> evil ones.\n"+
+									"You've destroyed <font color='0x2FB1D1'>"+ player.whiteAmount +"</font> cute fellows and <font color='0xD13D2F'>"+ player.blackAmount +"</font> evil ones.\n"+
 									"But there are still many worlds that require your attention..."+
 		                        "</font>" +
 		                    "</p>" +
 		                "</fx:filter>"+
 	                "</fx:effect>", 100000000, Constants.HEIGHT - 150).execute();
             }, 500);
+            
+            
+            gui.addChild(story);
+                        
+//            var ratioBlack: Number = player.blackAmount/ player.total;
+//            var iw : int = Math.floor(50 * ratioBlack);
+//            for(var i:int = 0;i<50; i++)
+//            {
+//                var mob: Mob = i <= iw ? new WhiteMob() : new BlackMob();
+//                mob.x = 20+RandomUtils.rangeAB((i-2)/50, (i+2)/50)*(Constants.WIDTH-40);
+//                mob.y = RandomUtils.rangeAB(420,440);
+//                mob.init();
+//                
+//                gui.addChild(mob);
+//            }
+            gui.addChild(continueBt);
 
             SoundManagerInstance.playSound("loop", 0.5, 0, -1);
         }

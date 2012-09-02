@@ -40,6 +40,21 @@ package ludum.game
             
             var dif : Point = mouse.subtract(pt(player.x, player.y));
             
+//            if(dif.length > Constants.BURST_DISTANCE && !_burst && _burstCoolDown <= 0){
+//                _burst = true;
+////                var mouse : Point = pt(StageUtils.stage.mouseX,StageUtils.stage.mouseY);
+//	            _burstTime = 0;
+//	            
+//	            velocity = mouse.subtract(pt(player.x, player.y));
+//	            velocity.normalize(Constants.BURST_SPEED);
+//	            
+//	            var splash: BurstSplash = new BurstSplash (_bitmap );
+//	            splash.x = player.x;
+//	            splash.y = player.y;
+//	            splash.rotation = player.view['_hero']['_body'].rotation;
+//	            player.parent.addChildAt(splash, 0);
+//            }
+            
             if(dif.length < Constants.MOUSE_PROXIMITY)
             	Mouse.hide();
 			else
@@ -115,21 +130,21 @@ package ludum.game
 
         private function mouseDown ( event : MouseEvent ) : void
         {
-            if( _burstCoolDown <= 0 && !_burst )
-            {
-	            var mouse : Point = pt(StageUtils.stage.mouseX,StageUtils.stage.mouseY);
-	            _burst = true;
-	            _burstTime = 0;
-	            
-	            velocity = mouse.subtract(pt(player.x, player.y));
-	            velocity.normalize(Constants.BURST_SPEED);
-	            
-	            var splash: BurstSplash = new BurstSplash (_bitmap );
-	            splash.x = player.x;
-	            splash.y = player.y;
-	            splash.rotation = player.view['_hero']['_body'].rotation;
-	            player.parent.addChildAt(splash, 0);
-            }
+//            if( _burstCoolDown <= 0 && !_burst )
+//            {
+//	            var mouse : Point = pt(StageUtils.stage.mouseX,StageUtils.stage.mouseY);
+//	            _burst = true;
+//	            _burstTime = 0;
+//	            
+//	            velocity = mouse.subtract(pt(player.x, player.y));
+//	            velocity.normalize(Constants.BURST_SPEED);
+//	            
+//	            var splash: BurstSplash = new BurstSplash (_bitmap );
+//	            splash.x = player.x;
+//	            splash.y = player.y;
+//	            splash.rotation = player.view['_hero']['_body'].rotation;
+//	            player.parent.addChildAt(splash, 0);
+//            }
         }
 
         public function get bitmap () : BitmapData {

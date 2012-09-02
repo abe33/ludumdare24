@@ -41,10 +41,11 @@ package ludum
         public static const PLAYER_STATE_SWITCH : Number = 10;
         public static const SPAWNING_FACTOR : Number = 0.5;
         public static const SPAWNING_COOLDOWN : Number = 500;
-        public static const BURST_COOLDOWN : Number = 1500;
+        public static const BURST_COOLDOWN : Number = 500;
 
 //        public static const GAME_DURATION : Number = 10 * 1000;
         public static const GAME_DURATION : Number = 3.7 * 60 * 1000;
-		public static const END_GAME_GAP : Number = 3500;
+        public static const END_GAME_GAP : Number = 3500;
+        public static const BURST_DISTANCE : Number = 300;
     }
 }

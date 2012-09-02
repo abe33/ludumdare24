@@ -174,7 +174,7 @@ package ludum.game
             SoundManagerInstance.playSound("music", 0.5, 0, -1);
             
             DefaultTimedDisplayEffect, DropShadowFilter;
-            
+             
             new ShowMessage(
             	"<fx:effect type='new abe.com.edia.text.fx.show::DefaultTimedDisplayEffect(20)'>"+
 	            	"<fx:filter type='new flash.filters::DropShadowFilter(0,0,0,1,4,4,2)'>"+
