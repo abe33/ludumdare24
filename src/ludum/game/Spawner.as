@@ -2,9 +2,11 @@ package ludum.game
 {
     import abe.com.mon.core.Allocable;
     import abe.com.mon.geom.pt;
-    import abe.com.mon.geom.rect;
+    import abe.com.mon.logs.Log;
+    import abe.com.mon.utils.Keys;
     import abe.com.mon.utils.MathUtils;
     import abe.com.mon.utils.RandomUtils;
+    import abe.com.mon.utils.StageUtils;
     import abe.com.mon.utils.arrays.lastIn;
     import abe.com.ponents.utils.ToolKit;
 
@@ -13,8 +15,8 @@ package ludum.game
     import flash.display.Bitmap;
     import flash.display.BitmapData;
     import flash.display.Sprite;
+    import flash.events.KeyboardEvent;
     import flash.geom.Point;
-    import flash.geom.Rectangle;
     /**
      * @author cedric
      */
@@ -73,12 +75,37 @@ package ludum.game
                     }
                 }
             }
-            _currentPattern = RandomUtils.inArray(_spawnCache[0]);
+            _currentPattern = RandomUtils.inArray(_spawnCache[_row]);
             
             CONFIG::DEBUG
             {
                 ToolKit.popupLevel.addChild(_spawnMap);
                 _spawnMap.x = Constants.WIDTH - _spawnMap.width;
+                StageUtils.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+            }
+        }
+        CONFIG::DEBUG
+        private function onKeyUp ( event : KeyboardEvent ) : void
+        {
+            var code:uint = event.keyCode;
+            var row:int = 0;
+            switch(code)
+            {
+                case Keys.NUMPAD_0 : row = 0; break;
+                case Keys.NUMPAD_1 : row = 1; break;
+                case Keys.NUMPAD_2 : row = 2; break;
+                case Keys.NUMPAD_3 : row = 3; break;
+                case Keys.NUMPAD_4 : row = 4; break;
+                case Keys.NUMPAD_5 : row = 5; break;
+                case Keys.NUMPAD_6 : row = 6; break;
+                case Keys.NUMPAD_7 : row = 7; break;
+                case Keys.NUMPAD_8 : row = 8; break;
+                case Keys.NUMPAD_9 : row = 9; break;
+            }
+            Log.debug(row);
+            if(row < _spawnCache.length)
+            {
+                _row = row;
             }
         }
 
@@ -99,7 +126,7 @@ package ludum.game
                 if(_x >= _currentPattern.length)
                 {
                 	_x -= _currentPattern.length;
-                    _currentPattern = RandomUtils.inArray(_spawnCache[0]);                    
+                    _currentPattern = RandomUtils.inArray(_spawnCache[_row]);                    
                 }
                 
 	            var last: Point = lastIn(_mask.curve.vertices);

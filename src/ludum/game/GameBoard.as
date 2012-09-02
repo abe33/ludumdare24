@@ -171,7 +171,7 @@ package ludum.game
             playerLevel.addChild(player);
             
             initParticles();
-            
+                        
 //            SoundManagerInstance.playSound("music", 0.5, 0, -1);
             
             DefaultTimedDisplayEffect, DropShadowFilter;
@@ -192,7 +192,11 @@ package ludum.game
             setTimeout(function():void{
                 new SingleTween(player, "x", Constants.WIDTH/2, 1000, NaN, Cubic.easeOut).execute();
             }, 2500);
+            
+            
         }
+
+       
 
         private function activatePlay () : void
         {
