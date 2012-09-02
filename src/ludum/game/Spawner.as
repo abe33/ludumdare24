@@ -22,7 +22,7 @@ package ludum.game
      */
     public class Spawner implements Allocable
     {
-        [Embed(source='./patterns/test.png')]
+        [Embed(source='./patterns/waves.png')]
         static public const SPAWN_MAP: Class;
         
         private var _container : Sprite;
