@@ -1,8 +1,5 @@
 package ludum.game
 {
-    import abe.com.motion.easing.Cubic;
-    import abe.com.motion.SingleTween;
-    import flash.filters.DropShadowFilter;
     import abe.com.edia.particles.actions.ContactWithSurfaceDeathActionStrategy;
     import abe.com.edia.particles.actions.ForceActionStrategy;
     import abe.com.edia.particles.actions.FrictionActionStrategy;
@@ -45,6 +42,8 @@ package ludum.game
     import abe.com.mon.utils.RandomUtils;
     import abe.com.motion.Impulse;
     import abe.com.motion.ImpulseListener;
+    import abe.com.motion.SingleTween;
+    import abe.com.motion.easing.Cubic;
     import abe.com.motion.easing.Quad;
 
     import ludum.Constants;
@@ -65,6 +64,7 @@ package ludum.game
     import flash.display.Shape;
     import flash.display.Sprite;
     import flash.filters.BlurFilter;
+    import flash.filters.DropShadowFilter;
     import flash.geom.Point;
     import flash.utils.ByteArray;
     import flash.utils.setTimeout;
@@ -97,14 +97,14 @@ package ludum.game
         private var spawner : Spawner;
         private var playerSystem : BaseParticleSystem;
         private var particleLevel : Sprite;
-        private var mobSystem : BaseParticleSystem;
+        private var mobParts : BaseParticleSystem;
         private var dustSystem : BaseParticleSystem;
         private var balance : MovieClip;
         private var effectsLevel : Sprite;
         public var gameEnded : Signal;
         private var _splashes : Array;
         private var progress : Sprite;
-        private var _canInteract: Boolean;
+        private var _canInteract : Boolean;
         
         public function GameBoard () {
             gameEnded = new Signal();
@@ -132,7 +132,7 @@ package ludum.game
             
             balance.gotoAndStop(50);
             balance.x = Constants.WIDTH / 2;
-            balance.scaleX = balance.scaleY = .4;
+            balance.scaleX = balance.scaleY = .4; 
             balance.y = Constants.HEIGHT-8;
             
             player = new Player();            
@@ -146,6 +146,7 @@ package ludum.game
             player.x = -20;
             player.y = 240;
             
+            spawner.init();
             player.init();
             playerTrail.init();
             whiteLand.init();
@@ -171,7 +172,7 @@ package ludum.game
             
             initParticles();
             
-            SoundManagerInstance.playSound("music", 0.5, 0, -1);
+//            SoundManagerInstance.playSound("music", 0.5, 0, -1);
             
             DefaultTimedDisplayEffect, DropShadowFilter;
              
@@ -239,7 +240,7 @@ package ludum.game
                     new ScaleLifeTweenActionStrategy(pt(1,1), pt(0.2,0.2), Quad.easeOut)
                 ) 
             );
-            mobSystem = new BaseParticleSystem( 
+            mobParts = new BaseParticleSystem( 
             	new MacroInitializer(
                 	new DisplayObjectInitializer(function(p:Particle):MovieClip{
                         var mc : MovieClip = new Misc.MOB_PARTICLES() as MovieClip;
@@ -304,10 +305,11 @@ package ludum.game
             blackLand.dispose();
             playerTrail.dispose();
             playerTrailBitmap.dispose();
-            mobSystem.stop();
-            mobSystem.dispose();
+            mobParts.stop();
+            mobParts.dispose();
             dustSystem.stop();
             dustSystem.dispose();
+            spawner.dispose();
                         
             for each(var s:MobSplash in _splashes)
             	s.dispose();
@@ -386,7 +388,7 @@ package ludum.game
 	                absorb.view.y =  balance['_good'].y;  
                 }
                 
-	            mobSystem.emit(emission);
+	            mobParts.emit(emission);
                 
             	spawner.release(mob);
                 
@@ -397,7 +399,7 @@ package ludum.game
                   
                 balance.gotoAndStop(50 - Math.max(-50, Math.min(50, player.ratio*2)));
                 
-                SoundManagerInstance.playSound("swoosh", 0.7, 0, 0);
+//                SoundManagerInstance.playSound("swoosh", 0.7, 0, 0);
             }
         }
 
