@@ -172,7 +172,7 @@ package ludum.game
             
             initParticles();
                         
-//            SoundManagerInstance.playSound("music", 0.5, 0, -1);
+            SoundManagerInstance.playSound("music", 0.5, 0, -1);
             
             DefaultTimedDisplayEffect, DropShadowFilter;
              
@@ -403,7 +403,7 @@ package ludum.game
                   
                 balance.gotoAndStop(50 - Math.max(-50, Math.min(50, player.ratio*2)));
                 
-//                SoundManagerInstance.playSound("swoosh", 0.7, 0, 0);
+                SoundManagerInstance.playSound("swoosh", 0.7, 0, 0);
             }
         }
 
