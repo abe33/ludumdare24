@@ -111,6 +111,8 @@ package ludum.game
 
         public function dispose () : void
         {
+            _spawnMap.bitmapData.dispose();
+            _spawnCache = null;
         }
         
         public function update(bias: Number, biasInSeconds:Number):void

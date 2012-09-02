@@ -1,5 +1,6 @@
 package ludum.samples
 {
+    import ludum.states.EndState;
     import abe.com.edia.sounds.SoundManagerInstance;
     import abe.com.edia.states.UIStateMachine;
     import abe.com.mon.utils.StageUtils;
@@ -58,6 +59,7 @@ package ludum.samples
             stateManager = new UIStateMachine();
            
             stateManager.addState( new PlayState(), 'play');
+            stateManager.addState( new EndState(), 'end');
             stateManager.goto("play");
         }
     }
