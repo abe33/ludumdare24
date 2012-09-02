@@ -320,7 +320,7 @@ package ludum.game
 
         public function tick ( bias : Number, biasInSeconds : Number, currentTime : Number ) : void
         {
-	        boardMask.ratio = player.ratio/player.total;
+	        boardMask.ratio = player.ratio/(player.total || 1);
             
             boardMask.update(bias, biasInSeconds);
             whiteLand.update(bias, biasInSeconds);
