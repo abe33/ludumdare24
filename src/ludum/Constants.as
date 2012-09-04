@@ -43,12 +43,13 @@ package ludum
         public static const SPAWNING_COOLDOWN : Number = 500;
         public static const BURST_COOLDOWN : Number = 500;
 
-//        public static const GAME_DURATION : Number = 10 * 1000;
+//        public static const GAME_DURATION : Number = 30 * 1000;
         public static const GAME_DURATION : Number = 3.7 * 60 * 1000;
         public static const END_GAME_GAP : Number = 3500;
         public static const BURST_DISTANCE : Number = 300;
         public static const SPAWN_ROW_HEIGHT : Number = 16;
         public static const SPAWN_SPEED : Number = 100;
         public static const SPAWN_SEED : int = 666;
+        public static const SPAWN_MARGIN : Number = 20;
     }
 }

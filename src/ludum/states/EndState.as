@@ -1,9 +1,7 @@
 package ludum.states
 {
-    import abe.com.mon.utils.RandomUtils;
-    import ludum.game.BlackMob;
-    import ludum.game.WhiteMob;
-    import ludum.game.Mob;
+    import abe.com.mon.logs.Log;
+    import ludum.game.GameBoard;
     import abe.com.edia.commands.SimpleFadeIn;
     import abe.com.edia.sounds.SoundManagerInstance;
     import abe.com.edia.states.AbstractUIState;
@@ -11,6 +9,7 @@ package ludum.states
     import abe.com.edia.text.fx.show.DefaultTimedDisplayEffect;
     import abe.com.mon.colors.Color;
     import abe.com.mon.utils.StageUtils;
+    import abe.com.mon.utils.StringUtils;
     import abe.com.ponents.buttons.Button;
     import abe.com.ponents.utils.ToolKit;
 
@@ -18,7 +17,6 @@ package ludum.states
     import ludum.assets.Misc;
     import ludum.assets.UIButton;
     import ludum.effects.ShowMessage;
-    import ludum.game.Player;
 
     import flash.display.Bitmap;
     import flash.display.Sprite;
@@ -49,20 +47,30 @@ package ludum.states
             
             Mouse.show();
             
-	        var player : Object = previousState ? (previousState as PlayState).board.player : {whiteAmount:20, blackAmount: 80, total: 100};
+            var board: GameBoard = previousState ? (previousState as PlayState).board : null; 
+            
+	        var player : Object = board.player;
             CONFIG::RELEASE
             {     
-	            var vars : URLVariables = new URLVariables();
-	            vars.total = player.total;
-	            vars.white = player.whiteAmount;
-	            vars.black = player.blackAmount;
-	            
-	            var request: URLRequest = new URLRequest(StageUtils.root.loaderInfo.parameters.callbackURL);
-	            request.method = URLRequestMethod.POST;
-	            request.data = vars;
-	            
-	            var loader:URLLoader = new URLLoader();
-	            loader.load(request);   
+                try               
+                {
+                
+		            var vars : URLVariables = new URLVariables();
+		            vars.total = player.total;
+		            vars.white = player.whiteAmount;
+		            vars.black = player.blackAmount;
+		            
+		            var request: URLRequest = new URLRequest(StageUtils.root.loaderInfo.parameters.callbackURL);
+		            request.method = URLRequestMethod.POST;
+		            request.data = vars;
+		            
+		            var loader:URLLoader = new URLLoader();
+		            loader.load(request);   
+                }
+                catch(e:Error)
+                {	
+                    
+                }
             }
             new SimpleFadeIn(ToolKit.popupLevel, Color.Black).execute();
                         
@@ -89,12 +97,17 @@ package ludum.states
 		                	"<p align='center'>" +
 		                    	"<font color='0xffffff' size='24' face='Diogenes' embedFonts='true'>"+
 					                "That's great!\n"+
-									"You've destroyed <font color='0x2FB1D1'>"+ player.whiteAmount +"</font> cute fellows and <font color='0xD13D2F'>"+ player.blackAmount +"</font> evil ones.\n"+
-									"But there are still many worlds that require your attention..."+
+									"You've destroyed <font color='0x2FB1D1'>"+ player.whiteAmount +"</font> cute fellows and " +
+									"<font color='0xD13D2F'>"+ player.blackAmount +"</font> evil ones.\n"+
+									"But there are still many worlds that require your attention...\n"+
+                                    "\nScore\n" +
+                                    "<font color='0x2FB1D1'>"+board.score.whiteScore + "</font> + " +
+                                    "<font color='0xD13D2F'>"+board.score.blackScore + "</font>\n"+
+                                    "<font size='32'>" + board.score.totalScore + "</font>" +
 		                        "</font>" +
 		                    "</p>" +
 		                "</fx:filter>"+
-	                "</fx:effect>", 100000000, Constants.HEIGHT - 150).execute();
+	                "</fx:effect>", 100000000).execute();
             }, 500);
             
             

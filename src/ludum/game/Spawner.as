@@ -42,6 +42,7 @@ package ludum.game
         private var _row : int;
         private var _x : int;
         private var _random : Random;
+        private var _totalSpawn:int;
          
         public function Spawner ( container : Sprite, mask : Mask)
         {
@@ -51,7 +52,7 @@ package ludum.game
             _t = 0;
             _quantity = 1;
             _factor = 0.05;
-            
+            _totalSpawn = 0;            
         }
         public function init () : void
         {
@@ -60,7 +61,7 @@ package ludum.game
             _spawnCache = [];
             _x = 0;
             _random = new Random(new LaggedFibonnacciRandom(Constants.SPAWN_SEED));
-            var bmp: BitmapData = _spawnMap.bitmapData
+            var bmp: BitmapData = _spawnMap.bitmapData;
             var rows: int = bmp.height / Constants.SPAWN_ROW_HEIGHT;
             var lastX: int = 0;
             for(var i:int = 0; i<rows; i++)
@@ -152,17 +153,18 @@ package ludum.game
 	                {
 	                    mob = new WhiteMob();
 	                    mob.x = Constants.WIDTH + 100;
-	                    mob.y = MathUtils.map(p.y, 0, Constants.SPAWN_ROW_HEIGHT/2, 0, last.y);
+	                    mob.y = MathUtils.map(p.y, 0, Constants.SPAWN_ROW_HEIGHT/2, Constants.SPAWN_MARGIN, last.y-Constants.SPAWN_MARGIN);
 	                }
 	                else
 	                {
 	                    mob = new BlackMob();
 	                    mob.x = Constants.WIDTH + 100;
-	                    mob.y = MathUtils.map(p.y, Constants.SPAWN_ROW_HEIGHT/2, Constants.SPAWN_ROW_HEIGHT, last.y, Constants.HEIGHT);
+	                    mob.y = MathUtils.map(p.y, Constants.SPAWN_ROW_HEIGHT/2, Constants.SPAWN_ROW_HEIGHT, last.y+Constants.SPAWN_MARGIN, Constants.HEIGHT-Constants.SPAWN_MARGIN);
 	                }
 	                mob.init();
 	                _allMobs.push(mob);
 	                _container.addChild(mob);
+                    _totalSpawn++;
 	            }
             }
         }
@@ -208,6 +210,14 @@ package ludum.game
 
         public function set row ( row : int ) : void {
             _row = row;
+        }
+
+        public function get totalSpawn () : int {
+            return _totalSpawn;
+        }
+
+        public function set totalSpawn ( totalSpawn : int ) : void {
+            _totalSpawn = totalSpawn;
         }
     }
 }

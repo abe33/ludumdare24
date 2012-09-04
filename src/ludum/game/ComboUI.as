@@ -41,11 +41,6 @@ package ludum.game
 
         public function dispose () : void
         {
-            _scorer.comboFailed.remove(comboFailed);
-            _scorer.comboSucceeded.remove(comboSucceeded);
-            _scorer.comboStarted.remove(comboStarted);
-            _scorer.comboLengthChanged.remove(comboLengthChanged);
-            _scorer.comboCompletionChanged.remove(comboCompletionChanged);
         }
         
         private function comboCompletionChanged (scorer:PlayerScoreController) : void
@@ -75,11 +70,24 @@ package ludum.game
         }
         private function updateMult () : void
         {
+            var white: String;
+            var black: String;
+            
+            if(_scorer.comboStartColor == PlayerScoreController.WHITE)
+            {
+                white = StringUtils.fill( '', _scorer.comboLength);
+                black = StringUtils.fill( '', _scorer.comboCompletionLength) + 
+                		StringUtils.fill( '', _scorer.comboLength - _scorer.comboCompletionLength, ' ');
+            }
+            else
+            {
+               	black = StringUtils.fill( '', _scorer.comboLength);
+               	white = StringUtils.fill( '', _scorer.comboLength - _scorer.comboCompletionLength, ' ') + 
+               	        StringUtils.fill( '', _scorer.comboCompletionLength); 
+            }
             
             _txt.htmlText = '<p align="center">'+ 
-            					StringUtils.fill( '', _scorer.comboLength) +
-                                ' - x'+_scorer.comboMult+' - '+
-                                StringUtils.fill( '', _scorer.comboCompletionLength) +
+            					white +  ' - x'+_scorer.comboMult+' - '+ black +
                                 '\n' + 
                                 StringUtils.fill(_scorer.white, 3) + ' | ' + StringUtils.fill(_scorer.black, 3) + 
                                 '\n' +

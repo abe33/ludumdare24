@@ -94,7 +94,7 @@ package ludum.game
         private var playerTrailBitmap: BitmapData;
         private var playerTrailScroller : BitmapScroller;
         private var mobLevel : Sprite;
-        private var spawner : Spawner;
+        public var spawner : Spawner;
         private var playerSystem : BaseParticleSystem;
         private var particleLevel : Sprite;
         private var mobParts : BaseParticleSystem;
@@ -105,7 +105,7 @@ package ludum.game
         private var _splashes : Array;
         private var progress : Sprite;
         private var _canInteract : Boolean;
-        private var score : PlayerScoreController;
+        public var score : PlayerScoreController;
         private var comboUI : ComboUI;
         
         public function GameBoard () {
@@ -337,7 +337,10 @@ package ludum.game
 
         public function tick ( bias : Number, biasInSeconds : Number, currentTime : Number ) : void
         {
-	        boardMask.ratio = player.ratio/(player.total || 1);
+            var totalMax:Number = 200;
+            var ratio:Number = 0.5;
+            var pond:Number = player.total/totalMax;
+	        boardMask.ratio = player.ratio/(player.total||1) * pond;
             
             boardMask.update(bias, biasInSeconds);
             whiteLand.update(bias, biasInSeconds);

@@ -25,6 +25,7 @@ package ludum.game
         private var _lastColor : Number;
         private var _comboStartColor : int;
         private var _comboCompletionLength : int;
+        
         static public const WHITE : int = 0;
         static public const BLACK : int = 1;
         static public const NO_COMBO : int = 0;
@@ -73,6 +74,17 @@ package ludum.game
 
         public function dispose () : void
         {
+            comboStarted.removeAll();
+            comboFailed.removeAll();
+            comboSucceeded.removeAll();
+            comboLengthChanged.removeAll();
+            comboCompletionChanged.removeAll();
+            
+            comboStarted = null;
+            comboFailed = null;
+            comboSucceeded = null;
+            comboLengthChanged = null;
+            comboCompletionChanged = null;
         }
 
         public function whiteHit () : void
@@ -97,10 +109,17 @@ package ludum.game
 //                    CONFIG::DEBUG {
 //                        Log.info ( "combo start" );
 //                    }
-                    _comboLength++;
-                    _comboState = COMBO_SIZE;
-                    _comboStartColor = type;
-                    comboStarted.dispatch(this);
+					if(type == _lastColor)
+                    {
+                        failedCombo();
+                    }
+                    else
+                    {
+	                    _comboLength++;
+	                    _comboState = COMBO_SIZE;
+	                    _comboStartColor = type;
+	                    comboStarted.dispatch(this);                        
+                    }
                     break;
                 case COMBO_SIZE:
                     if (type == _lastColor)
@@ -214,7 +233,9 @@ package ludum.game
         public function get total () : int {
             return _black + _white;
         }
-
+		public function get totalScore () : int {
+            return _blackScore + _whiteScore;
+        }
         public function get comboCompletionLength () : int {
             return _comboCompletionLength;
         }
@@ -225,6 +246,10 @@ package ludum.game
 
         public function get blackScore () : int {
             return _blackScore;
+        }
+
+        public function get comboStartColor () : int {
+            return _comboStartColor;
         }
     }
 }

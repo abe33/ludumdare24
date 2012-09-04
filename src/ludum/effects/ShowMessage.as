@@ -3,6 +3,7 @@
  */
 package ludum.effects 
 {
+    import ludum.Constants;
     import abe.com.edia.text.AdvancedTextField;
     import abe.com.mands.AbstractCommand;
     import abe.com.mands.Command;
@@ -60,14 +61,14 @@ package ludum.effects
 			_txt.wordWrap = true;
 			_txt.autoSize = "left";
 			_txt.multiline = true;
-			_txt.width = StageUtils.stage.stageWidth-40;
+			_txt.width = Constants.WIDTH-40;
 		}
 		protected function setupAfterAffectation () : void
 		{
 			var bb : Rectangle = _txt.getBounds( ToolKit.mainLevel );
 			
 			_txt.x = 20;
-			_txt.y = isNaN(_y) ? ((StageUtils.stage.stageHeight - _txt.height) - bb.y - 20) : _y;
+			_txt.y = isNaN(_y) ? ((Constants.HEIGHT - _txt.height) / 2) : _y;
 		}
 		protected function showMessage () : void
 		{	
@@ -84,9 +85,7 @@ package ludum.effects
 				_timeout.execute();
                 
              ToolKit.popupLevel.addChild(_txt);
-             StageUtils.centerX(_txt);
-             StageUtils.centerY(_txt);
-		}		
+        }		
 
 		public function clearSpeech ( e : Event = null ) : void
 		{
