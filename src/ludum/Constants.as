@@ -49,5 +49,6 @@ package ludum
         public static const BURST_DISTANCE : Number = 300;
         public static const SPAWN_ROW_HEIGHT : Number = 16;
         public static const SPAWN_SPEED : Number = 100;
+        public static const SPAWN_SEED : int = 666;
     }
 }

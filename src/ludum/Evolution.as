@@ -1,5 +1,7 @@
 package ludum
 {
+    import abe.com.mon.logs.Log;
+    import abe.com.mon.utils.Keys;
     import abe.com.edia.sounds.SoundManagerInstance;
     import abe.com.edia.states.UIStateMachine;
     import abe.com.mon.utils.StageUtils;
@@ -22,6 +24,7 @@ package ludum
     import ludum.states.StartState;
     import ludum.states.StoryState;
 
+    import flash.events.KeyboardEvent;
     import flash.text.Font;
 
     [SWF(backgroundColor="#000000", frameRate="60")]
@@ -49,7 +52,7 @@ package ludum
             Font.registerFont(Misc.GOTHAM);
             SkinManagerInstance.registerMetaStyle( UISkin );
             
-            ToolKit.initializeToolKit ( this );
+            ToolKit.initializeToolKit (this);
             
             SoundManagerInstance.addLibrarySound( Sounds.BACKGROUND_MUSIC, 	"music", 1 );
             SoundManagerInstance.addLibrarySound( Sounds.LOOP, "loop", 1);
@@ -77,9 +80,11 @@ package ludum
                 alloc.caption.layoutMode = GraphMonitorCaption.COLUMN_2_LAYOUT_MODE;
                 
                 ToolKit.debugPanel.addTab ( new SimpleTab ( _("Allocators"), alloc ) );
+                
             }
             
             stateManager.goto("start");
+            
         }
     }
 }

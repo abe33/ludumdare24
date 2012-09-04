@@ -105,6 +105,8 @@ package ludum.game
         private var _splashes : Array;
         private var progress : Sprite;
         private var _canInteract : Boolean;
+        private var score : PlayerScoreController;
+        private var comboUI : ComboUI;
         
         public function GameBoard () {
             gameEnded = new Signal();
@@ -136,21 +138,27 @@ package ludum.game
             balance.y = Constants.HEIGHT-8;
             
             player = new Player();            
+            score = new PlayerScoreController(player);
             whiteLand = new Land(WhiteSkin);
             blackLand = new Land(BlackSkin);
             playerTrailBitmap = new BitmapData(Constants.WIDTH+150, Constants.HEIGHT, true, 0x00000000);
             playerTrailScroller = new BitmapScroller(playerTrailBitmap);
             playerTrail = new Tracer(player, playerTrailBitmap);
             spawner = new Spawner(mobLevel, boardMask);
+            comboUI = new ComboUI(score);
             
             player.x = -20;
             player.y = 240;
             
             spawner.init();
+            score.init();
+            comboUI.init();
             player.init();
             playerTrail.init();
             whiteLand.init();
             blackLand.init();
+            
+            comboUI.x = Constants.WIDTH / 2;
                         
             player.controller.bitmap = playerTrailBitmap;
                         
@@ -166,6 +174,7 @@ package ludum.game
             addChild(effectsLevel);
             addChild(progress);
             addChild(balance);
+            addChild(comboUI);
             playerLevel.addChild(new Bitmap(playerTrailBitmap));
             playerLevel.addChild(particleLevel);
             playerLevel.addChild(player);
@@ -255,7 +264,7 @@ package ludum.game
                         mc.rotation = RandomUtils.irandom(360);
                         return mc;
                     }, effectsLevel),
-                    new LifeInitializer(500, 1500),
+                    new LifeInitializer(500, 1000),
                     new RandomizePositionInitializer(),
                     new ExplosionInitializer(200, 300),
                     new RandomizeVelocityInitializer(Math.PI/6,10)
@@ -314,6 +323,8 @@ package ludum.game
             dustSystem.stop();
             dustSystem.dispose();
             spawner.dispose();
+            score.dispose();
+            comboUI.dispose();
                         
             for each(var s:MobSplash in _splashes)
             	s.dispose();
@@ -334,7 +345,6 @@ package ludum.game
             playerTrailScroller.scroll(biasInSeconds);
             playerTrail.scroll(biasInSeconds);
             playerTrail.update(bias, biasInSeconds);
-            
             if(_canInteract)
             {
 	            player.update(bias, biasInSeconds);
@@ -355,6 +365,10 @@ package ludum.game
 	            progress['_prog'].scaleX = Math.min(_t/Constants.GAME_DURATION, 1);            
 	            _t += bias;
             }
+            score.update(bias, biasInSeconds);
+            spawner.row = score.difficulty;
+            
+            comboUI.update(bias, biasInSeconds);
                         
             boardMask.draw(maskShape);
         }
@@ -375,7 +389,7 @@ package ludum.game
 	            	DisplayObjectParticle, 
                     new PointEmitter(pt(mob.x, mob.y)), 
                     new InstantTimer(), 
-                    new FixedCounter(RandomUtils.irangeAB(8, 16)),
+                    new FixedCounter(RandomUtils.irangeAB(7, 12)),
                     new ParasiteInitializer('mob', mob is WhiteMob)
 	            );
                 
@@ -397,9 +411,15 @@ package ludum.game
             	spawner.release(mob);
                 
                 if(mob is WhiteMob)
+                {
                 	player.whiteAmount++;
+                    score.whiteHit();
+                }
                 else 
+                {
                 	player.blackAmount++;
+                    score.blackHit();
+                }
                   
                 balance.gotoAndStop(50 - Math.max(-50, Math.min(50, player.ratio*2)));
                 

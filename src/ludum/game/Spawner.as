@@ -1,5 +1,8 @@
 package ludum.game
 {
+    import abe.com.mon.randoms.LaggedFibonnacciRandom;
+    import abe.com.mon.randoms.NoiseRandom;
+    import abe.com.mon.randoms.Random;
     import abe.com.mon.core.Allocable;
     import abe.com.mon.geom.pt;
     import abe.com.mon.logs.Log;
@@ -8,7 +11,7 @@ package ludum.game
     import abe.com.mon.utils.RandomUtils;
     import abe.com.mon.utils.StageUtils;
     import abe.com.mon.utils.arrays.lastIn;
-    import abe.com.ponents.utils.ToolKit;
+    import abe.com.motion.Impulse;
 
     import ludum.Constants;
 
@@ -38,6 +41,7 @@ package ludum.game
         
         private var _row : int;
         private var _x : int;
+        private var _random : Random;
          
         public function Spawner ( container : Sprite, mask : Mask)
         {
@@ -55,6 +59,7 @@ package ludum.game
             _spawnMap = new SPAWN_MAP() as Bitmap;
             _spawnCache = [];
             _x = 0;
+            _random = new Random(new LaggedFibonnacciRandom(Constants.SPAWN_SEED));
             var bmp: BitmapData = _spawnMap.bitmapData
             var rows: int = bmp.height / Constants.SPAWN_ROW_HEIGHT;
             var lastX: int = 0;
@@ -75,12 +80,12 @@ package ludum.game
                     }
                 }
             }
-            _currentPattern = RandomUtils.inArray(_spawnCache[_row]);
+            _currentPattern = _random.inArray(_spawnCache[_row]);
             
             CONFIG::DEBUG
             {
-                ToolKit.popupLevel.addChild(_spawnMap);
-                _spawnMap.x = Constants.WIDTH - _spawnMap.width;
+//                ToolKit.popupLevel.addChild(_spawnMap);
+//                _spawnMap.x = Constants.WIDTH - _spawnMap.width;
                 StageUtils.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
             }
         }
@@ -88,7 +93,7 @@ package ludum.game
         private function onKeyUp ( event : KeyboardEvent ) : void
         {
             var code:uint = event.keyCode;
-            var row:int = 0;
+            var row:int = -1;
             switch(code)
             {
                 case Keys.NUMPAD_0 : row = 0; break;
@@ -102,10 +107,17 @@ package ludum.game
                 case Keys.NUMPAD_8 : row = 8; break;
                 case Keys.NUMPAD_9 : row = 9; break;
             }
-            Log.debug(row);
-            if(row < _spawnCache.length)
+            if(row != -1 && row < _spawnCache.length)
             {
+	            Log.debug("current row changed to: "+row);
                 _row = row;
+            }
+            if(event.keyCode == Keys.SPACE)
+            {
+                if(Impulse.isPlaying())
+                	Impulse.stop();
+                else 
+                	Impulse.start();
             }
         }
 
@@ -128,7 +140,7 @@ package ludum.game
                 if(_x >= _currentPattern.length)
                 {
                 	_x -= _currentPattern.length;
-                    _currentPattern = RandomUtils.inArray(_spawnCache[_row]);                    
+                    _currentPattern = _random.inArray(_spawnCache[_row]);                    
                 }
                 
 	            var last: Point = lastIn(_mask.curve.vertices);
@@ -188,6 +200,14 @@ package ludum.game
         }
         public function stop() : void {
             _lock = true;
+        }
+
+        public function get row () : int {
+            return _row;
+        }
+
+        public function set row ( row : int ) : void {
+            _row = row;
         }
     }
 }
